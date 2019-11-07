@@ -17,15 +17,10 @@ func Login(credenciales models.UsuarioCredenciales) (string, error) {
 
 	db.Raw("EXEC Usp_dbAuthUser ?, ?", credenciales.CodigoEmpleado, credenciales.Password).Scan(&result)
 
-	if result.IdColaborador == 0 {
+	if result.IdColaborador == "" {
+
 		return "", errors.New("Credenciales incorrectas")
 	}
-
-	//var eventosistema models.EventoDelSistema
-	// eventosistema.Evento = "Inicio de sesión"
-	// eventosistema.IdColaborador, _ = strconv.Atoi(credenciales.CodigoEmpleado)
-	// RegistarEventoDelSistema(eventosistema)
-
 	json.Marshal(&result)
 
 	token, _ := Create_JWT(result)
@@ -43,14 +38,9 @@ func LoginWithToken(credenciales models.UsuarioCredenciales) (string, error) {
 
 	db.Raw("EXEC usp_dbAuthUserWithToken ?, ?", credenciales.CodigoEmpleado, credenciales.Token).Scan(&result)
 
-	if result.IdColaborador == 0 {
+	if result.IdColaborador == "" {
 		return "", errors.New("Credenciales incorrectas")
 	}
-
-	// var eventosistema models.EventoDelSistema
-	// eventosistema.Evento = "Inicio de sesión"
-	// eventosistema.IdColaborador, _ = strconv.Atoi(credenciales.CodigoEmpleado)
-	// RegistarEventoDelSistema(eventosistema)
 
 	json.Marshal(&result)
 
