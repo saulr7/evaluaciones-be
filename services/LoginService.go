@@ -12,7 +12,7 @@ func Login(credenciales models.UsuarioCredenciales) (string, error) {
 
 	var result models.Usuario
 
-	db := config.ConnectDB()
+	db := config.ConnectDB4DX()
 	defer db.Close()
 
 	db.Raw("EXEC Usp_dbAuthUser ?, ?", credenciales.CodigoEmpleado, credenciales.Password).Scan(&result)

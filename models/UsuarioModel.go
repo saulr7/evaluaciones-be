@@ -16,4 +16,6 @@ type Usuario struct {
 	CambiarClave      bool   `gorm:"column:CambiarClave"`
 	EsLider           bool   `gorm:"column:EsLider"`
 	SubAreaId         int    `gorm:"column:idSubArea"`
+	IdColaborador     string `gorm:"column:idColaborador"`
+	Nombre            string `gorm:"column:Nombre"`
 }

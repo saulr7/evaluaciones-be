@@ -10,7 +10,7 @@ func Routes() *mux.Router {
 
 	myRouter.HandleFunc("/prueba", PruebaHandler).Methods("GET")
 	myRouter.HandleFunc("/login", LoginHandler)
-	// myRouter.HandleFunc("/loginWithToken", LoginWithToken)
+	myRouter.HandleFunc("/GetColaboradoresEquipo/{idColaborador}", GetColaboradoresEquipo).Methods("GET")
 	// myRouter.HandleFunc("/GetMetasColaborador/{codigoEmpleado}", GetMetasColaborador).Methods("GET")
 	// myRouter.HandleFunc("/GetMedidasPredictivas/{codigoEmpleado}", GetMedidasPredictivas).Methods("GET")
 	// myRouter.HandleFunc("/GetFrecuencias", GetFrecuencias)
