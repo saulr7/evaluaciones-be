@@ -17,7 +17,7 @@ func Login(credenciales models.UsuarioCredenciales) (string, error) {
 
 	db.Raw("EXEC Usp_dbAuthUser ?, ?", credenciales.CodigoEmpleado, credenciales.Password).Scan(&result)
 
-	if result.Empleado == 0 {
+	if result.IdColaborador == "" {
 		return "", errors.New("Credenciales incorrectas")
 	}
 
@@ -43,7 +43,7 @@ func LoginWithToken(credenciales models.UsuarioCredenciales) (string, error) {
 
 	db.Raw("EXEC usp_dbAuthUserWithToken ?, ?", credenciales.CodigoEmpleado, credenciales.Token).Scan(&result)
 
-	if result.Empleado == 0 {
+	if result.IdColaborador == "" {
 		return "", errors.New("Credenciales incorrectas")
 	}
 
