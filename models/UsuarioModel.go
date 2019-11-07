@@ -6,6 +6,6 @@ import (
 
 type Usuario struct {
 	IdSubArea     int    `gorm:"column:idSubArea"`
-	IdColaborador string `gorm:"column:idColaborador"`
+	IdColaborador int    `gorm:"column:idColaborador"`
 	Nombre        string `gorm:"column:Nombre"`
 }
