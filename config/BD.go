@@ -16,7 +16,6 @@ func ConnectDB() *gorm.DB {
 		panic(err)
 	}
 
-	// defer db.Close()
 	db.LogMode(true)
 	db.SingularTable(true)
 
@@ -31,7 +30,6 @@ func ConnectDB4DX() *gorm.DB {
 		panic(err)
 	}
 
-	// defer db.Close()
 	db.LogMode(true)
 	db.SingularTable(true)
 
