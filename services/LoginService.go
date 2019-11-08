@@ -3,6 +3,7 @@ package services
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 
 	"../config"
 	"../models"
@@ -16,6 +17,8 @@ func Login(credenciales models.UsuarioCredenciales) (string, error) {
 	defer db.Close()
 
 	db.Raw("EXEC Usp_dbAuthUser ?, ?", credenciales.CodigoEmpleado, credenciales.Password).Scan(&result)
+
+	fmt.Println(result)
 
 	if result.IdColaborador == "" {
 
