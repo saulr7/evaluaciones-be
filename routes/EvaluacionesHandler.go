@@ -18,8 +18,9 @@ func GetEvaluacionPorColaborador(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	idColaborador := vars["idColaborador"]
+	idEvaluacionAnual := vars["idEvaluacionAnual"]
 
-	var Resultados, erro = services.GetEvaluacionPorColaborador(idColaborador)
+	var Resultados, erro = services.GetEvaluacionPorColaborador(idColaborador, idEvaluacionAnual)
 
 	if erro != nil {
 		fmt.Println(erro)

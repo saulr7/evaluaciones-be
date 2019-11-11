@@ -8,6 +8,7 @@ import (
 
 type Evaluacion struct {
 	IdEvaluacion        int `gorm:"column:idEvaluacion"`
+	IdEvaluacionAnual   int `gorm:"column:idEvaluacionAnual"`
 	IdColaborador       int `gorm:"column:idColaborador"`
 	Anio                int `gorm:"column:Anio"`
 	IdGrado             int `gorm:"column:idGrado"`

@@ -7,28 +7,30 @@ import (
 	"../models"
 )
 
-func GetEvaluacionPorColaborador(idColaborador string) ([]models.Evaluacion, error) {
+func GetEvaluacionPorColaborador(idColaborador string, idEvaluacionAnual string) ([]models.Evaluacion, error) {
 
 	var EvaluacionEnvia []models.Evaluacion
 
 	type Result struct {
-		IdEvaluacion  int `gorm:"column:idEvaluacion"`
-		IdColaborador int `gorm:"column:idColaborador"`
-		Anio          int `gorm:"column:Anio"`
-		IdGrado       int `gorm:"column:idGrado"`
+		IdEvaluacion      int `gorm:"column:idEvaluacion"`
+		IdEvaluacionAnual int `gorm:"column:idEvaluacionAnual"`
+		IdColaborador     int `gorm:"column:idColaborador"`
+		Anio              int `gorm:"column:Anio"`
+		IdGrado           int `gorm:"column:idGrado"`
 	}
 
 	var result []Result
 	db := config.ConnectDB()
 	defer db.Close()
 
-	db.Raw("EXEC usp_GetEvaluacionPorColaborador ?", idColaborador).Scan(&result)
+	db.Raw("EXEC usp_GetEvaluacionPorColaborador ?,?", idColaborador, idEvaluacionAnual).Scan(&result)
 	for _, dato := range result {
 
 		var Encabezado []models.EncabezadoPreguntas
 		var EvaluacionTemp models.Evaluacion
 
 		EvaluacionTemp.IdEvaluacion = dato.IdEvaluacion
+		EvaluacionTemp.IdEvaluacionAnual = dato.IdEvaluacionAnual
 		EvaluacionTemp.IdColaborador = dato.IdColaborador
 		EvaluacionTemp.Anio = dato.Anio
 		EvaluacionTemp.IdGrado = dato.IdGrado
