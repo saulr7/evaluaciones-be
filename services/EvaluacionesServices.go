@@ -12,11 +12,10 @@ func GetEvaluacionPorColaborador(idColaborador string) ([]models.Evaluacion, err
 	var EvaluacionEnvia []models.Evaluacion
 
 	type Result struct {
-		IdEvaluacion     int `gorm:"column:idEvaluacion"`
-		IdColaborador    int `gorm:"column:idColaborador"`
-		Anio             int `gorm:"column:Anio"`
-		PorcentajeAvance int `gorm:"column:PorcentajeAvance"`
-		idGrado          int `gorm:"column:idGrado"`
+		IdEvaluacion  int `gorm:"column:idEvaluacion"`
+		IdColaborador int `gorm:"column:idColaborador"`
+		Anio          int `gorm:"column:Anio"`
+		IdGrado       int `gorm:"column:idGrado"`
 	}
 
 	var result []Result
@@ -32,8 +31,7 @@ func GetEvaluacionPorColaborador(idColaborador string) ([]models.Evaluacion, err
 		EvaluacionTemp.IdEvaluacion = dato.IdEvaluacion
 		EvaluacionTemp.IdColaborador = dato.IdColaborador
 		EvaluacionTemp.Anio = dato.Anio
-		EvaluacionTemp.PorcentajeAvance = dato.PorcentajeAvance
-		EvaluacionTemp.IdGrado = dato.idGrado
+		EvaluacionTemp.IdGrado = dato.IdGrado
 
 		db.Raw("EXEC usp_GetEncabezadosPorColaborador ?", idColaborador).Scan(&Encabezado)
 
@@ -45,6 +43,14 @@ func GetEvaluacionPorColaborador(idColaborador string) ([]models.Evaluacion, err
 
 			for _, Pregunt := range Preguntas {
 				fmt.Println(Pregunt)
+				var Respuestas []models.Respuestas
+
+				db.Raw("EXEC usp_GetRespuestasPorPregunta ?,?,?", Pregunt.IdTipoRespuesta, Pregunt.IdPregunta, idColaborador).Scan(&Respuestas)
+				for _, Respu := range Respuestas {
+					fmt.Println(Respu)
+					Pregunt.Respuestas = append(Pregunt.Respuestas, Respu)
+				}
+
 				Cabeza.Preguntas = append(Cabeza.Preguntas, Pregunt)
 			}
 			EvaluacionTemp.EncabezadoPreguntas = append(EvaluacionTemp.EncabezadoPreguntas, Cabeza)
