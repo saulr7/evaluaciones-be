@@ -1,13 +1,31 @@
 package services
 
 import (
+	"fmt"
+	"time"
+
 	"../config"
 	"../models"
 )
 
-func GetReasignaciones() ([]models.Reasignacion, error) {
+func NewReasignacion(Modelo models.Reasignacion) (models.Reasignacion, error) {
 
-	var result []models.Reasignacion
+	Modelo.IdAsignacion = 0
+	Modelo.FechaModificacion = time.Now()
+
+	db := config.ConnectDB4DX()
+	defer db.Close()
+
+	db.Create(&Modelo)
+
+	fmt.Println(Modelo)
+
+	return Modelo, nil
+}
+
+func GetReasignaciones() ([]models.ReasignacionDetallada, error) {
+
+	var result []models.ReasignacionDetallada
 
 	db := config.ConnectDB4DX()
 	defer db.Close()
