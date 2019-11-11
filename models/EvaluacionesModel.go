@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	_ "github.com/jinzhu/gorm"
 )
 
@@ -34,4 +36,20 @@ type Respuestas struct {
 	Etiqueta               string `gorm:"column:Etiqueta"`
 	Valor                  int    `gorm:"column:Valor"`
 	ValorSeteado           int    `gorm:"column:ValorSeteado"`
+}
+
+type EvaluacionAnual struct {
+	IdEvaluacionAnual int       `gorm:"column:idEvaluacionAnual"`
+	Titulo            string    `gorm:"column:Titulo"`
+	Descripcion       string    `gorm:"column:Descripcion"`
+	Desde             time.Time `gorm:"column:desde"`
+	Hasta             time.Time `gorm:"column:Hasta"`
+	CreadaPor         int       `gorm:"column:CreadaPor"`
+	NombreCreador     string    `gorm:"column:NombreCreador"`
+	FechaCreacion     time.Time `gorm:"column:FechaCreacion"`
+	FechaModificacion time.Time `gorm:"column:FechaModificacion"`
+	ModificadaPor     int       `gorm:"column:ModificadaPor"`
+	NombreModifico    string    `gorm:"column:NombreModifico"`
+	IdArea            int       `gorm:"column:idArea"`
+	IdGrado           int       `gorm:"column:idGrado"`
 }

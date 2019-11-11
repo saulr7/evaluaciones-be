@@ -59,3 +59,15 @@ func GetEvaluacionPorColaborador(idColaborador string) ([]models.Evaluacion, err
 	}
 	return EvaluacionEnvia, nil
 }
+
+func GetEvaluacionAnual(idColaborador string) ([]models.EvaluacionAnual, error) {
+
+	var result []models.EvaluacionAnual
+
+	db := config.ConnectDB()
+	defer db.Close()
+
+	db.Raw("EXEC usp_GetEvaluacionesAnuales ?", idColaborador).Scan(&result)
+
+	return result, nil
+}
