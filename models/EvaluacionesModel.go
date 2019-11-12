@@ -38,6 +38,8 @@ type Respuestas struct {
 	Etiqueta               string `gorm:"column:Etiqueta"`
 	Valor                  int    `gorm:"column:Valor"`
 	ValorSeteado           int    `gorm:"column:ValorSeteado"`
+	IdComentario           int    `gorm:"column:idComentario"`
+	Comentario             string `gorm:"column:Comentario"`
 }
 
 type EvaluacionAnual struct {
