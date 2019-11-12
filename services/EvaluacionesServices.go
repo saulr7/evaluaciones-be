@@ -1,8 +1,6 @@
 package services
 
 import (
-	"fmt"
-
 	"../config"
 	"../models"
 )
@@ -40,18 +38,15 @@ func GetEvaluacionPorColaborador(idColaborador string, idEvaluacionAnual string)
 		db.Raw("EXEC usp_GetEncabezadosPorColaborador ?,?", idColaborador, idEvaluacionAnual).Scan(&Encabezado)
 
 		for _, Cabeza := range Encabezado {
-			fmt.Println(Cabeza)
 			var Preguntas []models.Preguntas
 
 			db.Raw("EXEC usp_GetPreguntasPorColaboradorYGrado ?,?", idColaborador, Cabeza.IdGradoPorCompetencia).Scan(&Preguntas)
 
 			for _, Pregunt := range Preguntas {
-				fmt.Println(Pregunt)
 				var Respuestas []models.Respuestas
 
 				db.Raw("EXEC usp_GetRespuestasPorPregunta ?,?,?,?", Pregunt.IdTipoRespuesta, Pregunt.IdPregunta, idColaborador, idEvaluacionAnual).Scan(&Respuestas)
 				for _, Respu := range Respuestas {
-					fmt.Println(Respu)
 					Pregunt.Respuestas = append(Pregunt.Respuestas, Respu)
 				}
 
