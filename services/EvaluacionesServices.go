@@ -37,7 +37,7 @@ func GetEvaluacionPorColaborador(idColaborador string, idEvaluacionAnual string)
 		EvaluacionTemp.IdGrado = dato.IdGrado
 		EvaluacionTemp.Completo = dato.Completo
 
-		db.Raw("EXEC usp_GetEncabezadosPorColaborador ?", idColaborador).Scan(&Encabezado)
+		db.Raw("EXEC usp_GetEncabezadosPorColaborador ?,?", idColaborador, idEvaluacionAnual).Scan(&Encabezado)
 
 		for _, Cabeza := range Encabezado {
 			fmt.Println(Cabeza)
@@ -49,7 +49,7 @@ func GetEvaluacionPorColaborador(idColaborador string, idEvaluacionAnual string)
 				fmt.Println(Pregunt)
 				var Respuestas []models.Respuestas
 
-				db.Raw("EXEC usp_GetRespuestasPorPregunta ?,?,?", Pregunt.IdTipoRespuesta, Pregunt.IdPregunta, idColaborador).Scan(&Respuestas)
+				db.Raw("EXEC usp_GetRespuestasPorPregunta ?,?,?,?", Pregunt.IdTipoRespuesta, Pregunt.IdPregunta, idColaborador, idEvaluacionAnual).Scan(&Respuestas)
 				for _, Respu := range Respuestas {
 					fmt.Println(Respu)
 					Pregunt.Respuestas = append(Pregunt.Respuestas, Respu)
