@@ -10,3 +10,8 @@ type Usuario struct {
 	Nombre        string `gorm:"column:UsrNom"`
 	Accion        string `gorm:"column:Accion"`
 }
+
+type UsuarioPorcentaje struct {
+	Usuario
+	Completo string `gorm:"column:Completo"`
+}

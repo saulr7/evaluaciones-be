@@ -16,3 +16,15 @@ func GetColaboradoresEquipo(idColaborador string) ([]models.Usuario, error) {
 
 	return result, nil
 }
+
+func GetEquipoEvaluacion(idColaborador string, idEvaluacionAnual string) ([]models.UsuarioPorcentaje, error) {
+
+	var result []models.UsuarioPorcentaje
+
+	db := config.ConnectDB()
+	defer db.Close()
+
+	db.Raw("EXEC usp_GetEquipoPorLider ?,?", idColaborador, idEvaluacionAnual).Scan(&result)
+
+	return result, nil
+}
