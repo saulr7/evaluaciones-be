@@ -1,6 +1,8 @@
 package services
 
 import (
+	"fmt"
+
 	"../config"
 	"../models"
 )
@@ -69,4 +71,22 @@ func GetEvaluacionAnual(idColaborador string) ([]models.EvaluacionAnual, error) 
 	db.Raw("EXEC usp_GetEvaluacionesAnuales ?", idColaborador).Scan(&result)
 
 	return result, nil
+}
+
+func GuardarEvaluacionCompletada(evaluacionCompletada models.EvaluacionCompletada) (bool, error) {
+
+	var result []models.EvaluacionAnual
+
+	db := config.ConnectDB()
+	defer db.Close()
+
+	for _, respuesta := range evaluacionCompletada.Respuestas {
+		fmt.Println(respuesta.IdRespuestaPorPregunta, respuesta.IdPregunta, respuesta.IdRespuesta)
+
+		db.Raw("UPDATE RespuestasPorPregunta SET valor = ? WHERE idRespuestasPorPregunta =  ?", respuesta.IdRespuesta, respuesta.IdRespuestaPorPregunta).Scan(&result)
+	}
+
+	db.Raw("UPDATE Evaluaciones SET Completo = 1, evaluadoPor =?, FechaCompletado = GETDATE() WHERE idEvaluacion = ?", evaluacionCompletada.EvaluadoPor, evaluacionCompletada.IdEvaluacion).Scan(&result)
+
+	return true, nil
 }

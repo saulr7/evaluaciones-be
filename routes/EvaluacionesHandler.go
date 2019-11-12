@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"../models"
 	"../services"
 	"github.com/gorilla/mux"
 )
@@ -55,4 +56,33 @@ func GetEvaluacionAnual(w http.ResponseWriter, r *http.Request) {
 	responseString := string(response)
 
 	fmt.Fprint(w, responseString)
+}
+
+func EvaluacionCompletadaHandler(w http.ResponseWriter, r *http.Request) {
+
+	var evaluacionCompletada models.EvaluacionCompletada
+	err := json.NewDecoder(r.Body).Decode(&evaluacionCompletada)
+
+	fmt.Println(evaluacionCompletada)
+
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, "Credenciales incorrectas")
+		return
+	}
+
+	var respuesta, erro = services.GuardarEvaluacionCompletada(evaluacionCompletada)
+
+	if erro != nil {
+		fmt.Println(erro)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, erro)
+		return
+	}
+
+	// response, _ := json.Marshal("{status: ok}")
+	response, _ := json.Marshal(&respuesta)
+
+	fmt.Fprintf(w, string(response))
 }
