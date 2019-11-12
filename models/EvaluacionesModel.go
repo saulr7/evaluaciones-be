@@ -7,12 +7,14 @@ import (
 )
 
 type Evaluacion struct {
-	IdEvaluacion        int  `gorm:"column:idEvaluacion"`
-	IdEvaluacionAnual   int  `gorm:"column:idEvaluacionAnual"`
-	IdColaborador       int  `gorm:"column:idColaborador"`
-	Anio                int  `gorm:"column:Anio"`
-	IdGrado             int  `gorm:"column:idGrado"`
-	Completo            bool `gorm:"column:Completo"`
+	IdEvaluacion        int    `gorm:"column:idEvaluacion"`
+	IdEvaluacionAnual   int    `gorm:"column:idEvaluacionAnual"`
+	IdColaborador       int    `gorm:"column:idColaborador"`
+	Anio                int    `gorm:"column:Anio"`
+	IdGrado             int    `gorm:"column:idGrado"`
+	Completo            bool   `gorm:"column:Completo"`
+	Titulo              string `gorm:"column:Titulo"`
+	Descripcion         string `gorm:"column:Descripcion"`
 	EncabezadoPreguntas []EncabezadoPreguntas
 }
 

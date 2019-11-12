@@ -63,8 +63,6 @@ func EvaluacionCompletadaHandler(w http.ResponseWriter, r *http.Request) {
 	var evaluacionCompletada models.EvaluacionCompletada
 	err := json.NewDecoder(r.Body).Decode(&evaluacionCompletada)
 
-	fmt.Println(evaluacionCompletada)
-
 	if err != nil {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)

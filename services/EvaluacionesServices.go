@@ -1,8 +1,6 @@
 package services
 
 import (
-	"fmt"
-
 	"../config"
 	"../models"
 )
@@ -12,12 +10,14 @@ func GetEvaluacionPorColaborador(idColaborador string, idEvaluacionAnual string)
 	var EvaluacionEnvia []models.Evaluacion
 
 	type Result struct {
-		IdEvaluacion      int  `gorm:"column:idEvaluacion"`
-		IdEvaluacionAnual int  `gorm:"column:idEvaluacionAnual"`
-		IdColaborador     int  `gorm:"column:idColaborador"`
-		Anio              int  `gorm:"column:Anio"`
-		IdGrado           int  `gorm:"column:idGrado"`
-		Completo          bool `gorm:"column:Completo"`
+		IdEvaluacion      int    `gorm:"column:idEvaluacion"`
+		IdEvaluacionAnual int    `gorm:"column:idEvaluacionAnual"`
+		IdColaborador     int    `gorm:"column:idColaborador"`
+		Anio              int    `gorm:"column:Anio"`
+		IdGrado           int    `gorm:"column:idGrado"`
+		Completo          bool   `gorm:"column:Completo"`
+		Titulo            string `gorm:"column:Titulo"`
+		Descripcion       string `gorm:"column:Descripcion"`
 	}
 
 	var result []Result
@@ -36,6 +36,8 @@ func GetEvaluacionPorColaborador(idColaborador string, idEvaluacionAnual string)
 		EvaluacionTemp.Anio = dato.Anio
 		EvaluacionTemp.IdGrado = dato.IdGrado
 		EvaluacionTemp.Completo = dato.Completo
+		EvaluacionTemp.Titulo = dato.Titulo
+		EvaluacionTemp.Descripcion = dato.Descripcion
 
 		db.Raw("EXEC usp_GetEncabezadosPorColaborador ?,?", idColaborador, idEvaluacionAnual).Scan(&Encabezado)
 
@@ -76,14 +78,22 @@ func GetEvaluacionAnual(idColaborador string) ([]models.EvaluacionAnual, error) 
 func GuardarEvaluacionCompletada(evaluacionCompletada models.EvaluacionCompletada) (bool, error) {
 
 	var result []models.EvaluacionAnual
+	var comentario models.Comentario
 
 	db := config.ConnectDB()
 	defer db.Close()
 
 	for _, respuesta := range evaluacionCompletada.Respuestas {
-		fmt.Println(respuesta.IdRespuestaPorPregunta, respuesta.IdPregunta, respuesta.IdRespuesta)
 
 		db.Raw("UPDATE RespuestasPorPregunta SET valor = ? WHERE idRespuestasPorPregunta =  ?", respuesta.IdRespuesta, respuesta.IdRespuestaPorPregunta).Scan(&result)
+
+		if respuesta.TxtComentario != "" {
+			comentario.IdComentario = 0
+			comentario.Comentario = respuesta.TxtComentario
+			comentario.IdRespuestaPorPregunta = respuesta.IdRespuestaPorPregunta
+
+			db.Create(&comentario)
+		}
 	}
 
 	db.Raw("UPDATE Evaluaciones SET Completo = 1, evaluadoPor =?, FechaCompletado = GETDATE() WHERE idEvaluacion = ?", evaluacionCompletada.EvaluadoPor, evaluacionCompletada.IdEvaluacion).Scan(&result)
