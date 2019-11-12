@@ -11,10 +11,6 @@ import (
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.Header().Set("Access-Control-Expose-Headers: Content-Length", "X-JSON")
-	w.Header().Set("Access-Control-Allow-Headers", "*")
-
 	var credenciales models.UsuarioCredenciales
 	err := json.NewDecoder(r.Body).Decode(&credenciales)
 
