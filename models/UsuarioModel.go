@@ -13,5 +13,5 @@ type Usuario struct {
 
 type UsuarioPorcentaje struct {
 	Usuario
-	Completo string `gorm:"column:Completo"`
+	Completo bool `gorm:"column:Completo"`
 }
