@@ -7,4 +7,5 @@ import (
 type Colaborador struct {
 	IdColaborador int    `gorm:"column:idColaborador"`
 	Nombre        string `gorm:"column:NombreColaborador"`
+	Accion        string `gorm:"column:Accion"`
 }
