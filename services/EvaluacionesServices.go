@@ -12,11 +12,12 @@ func GetEvaluacionPorColaborador(idColaborador string, idEvaluacionAnual string)
 	var EvaluacionEnvia []models.Evaluacion
 
 	type Result struct {
-		IdEvaluacion      int `gorm:"column:idEvaluacion"`
-		IdEvaluacionAnual int `gorm:"column:idEvaluacionAnual"`
-		IdColaborador     int `gorm:"column:idColaborador"`
-		Anio              int `gorm:"column:Anio"`
-		IdGrado           int `gorm:"column:idGrado"`
+		IdEvaluacion      int  `gorm:"column:idEvaluacion"`
+		IdEvaluacionAnual int  `gorm:"column:idEvaluacionAnual"`
+		IdColaborador     int  `gorm:"column:idColaborador"`
+		Anio              int  `gorm:"column:Anio"`
+		IdGrado           int  `gorm:"column:idGrado"`
+		Completo          bool `gorm:"column:Completo"`
 	}
 
 	var result []Result
@@ -34,6 +35,7 @@ func GetEvaluacionPorColaborador(idColaborador string, idEvaluacionAnual string)
 		EvaluacionTemp.IdColaborador = dato.IdColaborador
 		EvaluacionTemp.Anio = dato.Anio
 		EvaluacionTemp.IdGrado = dato.IdGrado
+		EvaluacionTemp.Completo = dato.Completo
 
 		db.Raw("EXEC usp_GetEncabezadosPorColaborador ?", idColaborador).Scan(&Encabezado)
 
