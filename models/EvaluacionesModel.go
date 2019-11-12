@@ -32,7 +32,7 @@ type Preguntas struct {
 }
 
 type Respuestas struct {
-	IdRespuestaPorPregunta int    `gorm:"column:idRespuestaPorPregunta"`
+	IdRespuestaPorPregunta int    `gorm:"column:idRespuestasPorPregunta"`
 	IdDetallePregunta      int    `gorm:"column:idDetallePregunta"`
 	Descripcion            string `gorm:"column:Descripcion"`
 	Etiqueta               string `gorm:"column:Etiqueta"`
