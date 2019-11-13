@@ -59,3 +59,25 @@ type EvaluacionAnual struct {
 	IdArea            int       `gorm:"column:idArea"`
 	IdGrado           int       `gorm:"column:idGrado"`
 }
+
+type EvaluacionMeta struct {
+	IdEvaluacionAnual int       `gorm:"column:idEvaluacionAnual"`
+	IdPadre           int       `gorm:"column:idPadre"`
+	Descripcion       string    `gorm:"column:Descripcion"`
+	FechaCreacion     time.Time `gorm:"column:FechaCreacion"`
+	CreadaPor         int       `gorm:"column:CreadaPor"`
+	NombreCreador     string    `gorm:"column:NombreCreador"`
+	TodoElEquipo      bool      `gorm:"column:TodoElEquipo"`
+	IdSubArea         int       `gorm:"column:idSubArea"`
+	TotalPreguntas    int       `gorm:"column:TotalPreguntas"`
+	PreguntasMeta     []PreguntasMeta
+}
+
+type PreguntasMeta struct {
+	IdPreguntasPorEvaluacionPorMeta int    `gorm:"column:idPreguntasPorEvaluacionPorMeta"`
+	IdRespuestasPorPregunta         int    `gorm:"column:idRespuestasPorPregunta"`
+	IdPregunta                      int    `gorm:"column:idPregunta"`
+	Pregunta                        string `gorm:"column:Pregunta"`
+	Meta                            int    `gorm:"column:Meta"`
+	Valor                           int    `gorm:"column:Valor"`
+}
