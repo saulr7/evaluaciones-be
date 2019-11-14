@@ -72,6 +72,32 @@ func EvaluacionCompletadaHandler(w http.ResponseWriter, r *http.Request) {
 
 	var respuesta, erro = services.GuardarEvaluacionCompletada(evaluacionCompletada)
 
+	if erro != nil || respuesta == false {
+		fmt.Println(erro)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, erro)
+		return
+	}
+
+	response, _ := json.Marshal(&respuesta)
+
+	fmt.Fprintf(w, string(response))
+}
+
+func NuevaEvaluacionPorMetaHandler(w http.ResponseWriter, r *http.Request) {
+
+	var evaluacionPorMeta models.NuevaEvaluacionPorMeta
+	err := json.NewDecoder(r.Body).Decode(&evaluacionPorMeta)
+
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, "Credenciales incorrectas")
+		return
+	}
+
+	var respuesta, erro = services.NuevaEvaluacionPorMeta(evaluacionPorMeta)
+
 	if erro != nil {
 		fmt.Println(erro)
 		w.WriteHeader(http.StatusBadRequest)
@@ -79,7 +105,6 @@ func EvaluacionCompletadaHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// response, _ := json.Marshal("{status: ok}")
 	response, _ := json.Marshal(&respuesta)
 
 	fmt.Fprintf(w, string(response))

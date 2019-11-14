@@ -1,7 +1,6 @@
 package services
 
 import (
-	"fmt"
 	"time"
 
 	"../config"
@@ -17,8 +16,6 @@ func NewReasignacion(Modelo models.Reasignacion) (models.Reasignacion, error) {
 	defer db.Close()
 
 	db.Create(&Modelo)
-
-	fmt.Println(Modelo)
 
 	return Modelo, nil
 }

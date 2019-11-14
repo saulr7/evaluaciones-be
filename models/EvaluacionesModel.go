@@ -40,20 +40,28 @@ type Respuestas struct {
 	Etiqueta               string `gorm:"column:Etiqueta"`
 	Valor                  int    `gorm:"column:Valor"`
 	ValorSeteado           int    `gorm:"column:ValorSeteado"`
+	Comentario
 }
 
 type EvaluacionAnual struct {
-	IdEvaluacionAnual int       `gorm:"column:idEvaluacionAnual"`
+	IdEvaluacionAnual int       `gorm:"column:idEvaluacionAnual;AUTO_INCREMENT"`
 	Titulo            string    `gorm:"column:Titulo"`
 	Descripcion       string    `gorm:"column:Descripcion"`
-	Desde             time.Time `gorm:"column:desde"`
+	Desde             time.Time `gorm:"column:Desde"`
 	Hasta             time.Time `gorm:"column:Hasta"`
 	CreadaPor         int       `gorm:"column:CreadaPor"`
-	NombreCreador     string    `gorm:"column:NombreCreador"`
+	// NombreCreador     string    `gorm:"column:NombreCreador"`
 	FechaCreacion     time.Time `gorm:"column:FechaCreacion"`
 	FechaModificacion time.Time `gorm:"column:FechaModificacion"`
 	ModificadaPor     int       `gorm:"column:ModificadaPor"`
-	NombreModifico    string    `gorm:"column:NombreModifico"`
-	IdArea            int       `gorm:"column:idArea"`
-	IdGrado           int       `gorm:"column:idGrado"`
+	// NombreModifico    string    `gorm:"column:NombreModifico"`
+	IdSubArea     int  `gorm:"column:idSubArea"`
+	TodasLasAreas bool `gorm:"column:TodasLasAreas"`
+	IdPadre       int  `gorm:"column:idPadre"`
+	TodoElEquipo  bool `gorm:"column:TodoElEquipo"`
+	Estado        bool `gorm:"column:Estado"`
+}
+
+func (EvaluacionAnual) TableName() string {
+	return "EvaluacionesAnuales"
 }

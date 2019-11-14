@@ -1,6 +1,9 @@
 package services
 
 import (
+	"fmt"
+	"time"
+
 	"../config"
 	"../models"
 )
@@ -83,9 +86,26 @@ func GuardarEvaluacionCompletada(evaluacionCompletada models.EvaluacionCompletad
 	db := config.ConnectDB()
 	defer db.Close()
 
+	tx := db.Begin()
+
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+
+		}
+	}()
+
 	for _, respuesta := range evaluacionCompletada.Respuestas {
 
-		db.Raw("UPDATE RespuestasPorPregunta SET valor = ? WHERE idRespuestasPorPregunta =  ?", respuesta.IdRespuesta, respuesta.IdRespuestaPorPregunta).Scan(&result)
+		query := db.Raw("UPDATE RespuestasPorPregunta SET valor = ? WHERE idRespuestasPorPregunta =  ?", respuesta.IdRespuesta, respuesta.IdRespuestaPorPregunta).Scan(&result)
+
+		fmt.Println(query.RowsAffected, query.Error)
+
+		if query.Error != nil {
+			tx.Rollback()
+			panic(query.Error)
+
+		}
 
 		if respuesta.TxtComentario != "" {
 			comentario.IdComentario = 0
@@ -98,5 +118,84 @@ func GuardarEvaluacionCompletada(evaluacionCompletada models.EvaluacionCompletad
 
 	db.Raw("UPDATE Evaluaciones SET Completo = 1, evaluadoPor =?, FechaCompletado = GETDATE() WHERE idEvaluacion = ?", evaluacionCompletada.EvaluadoPor, evaluacionCompletada.IdEvaluacion).Scan(&result)
 
-	return true, nil
+	return true, tx.Commit().Error
+}
+
+func NuevaEvaluacionPorMeta(evaluacionPorMeta models.NuevaEvaluacionPorMeta) (models.EvaluacionAnual, error) {
+
+	var result models.EvaluacionAnual
+
+	db := config.ConnectDB()
+	defer db.Close()
+
+	tx := db.Begin()
+
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+
+		}
+	}()
+
+	db.Raw(" SELECT * FROM EvaluacionesAnuales WHERE idEvaluacionAnual = ?", evaluacionPorMeta.IdEvaluacionAnual).Scan(&result)
+
+	evaluacionPorMeta.Desde = result.Desde
+	evaluacionPorMeta.Hasta = result.Hasta
+	evaluacionPorMeta.Estado = true
+	evaluacionPorMeta.IdPadre = result.IdEvaluacionAnual
+	evaluacionPorMeta.FechaCreacion = time.Now()
+	evaluacionPorMeta.FechaModificacion = time.Now()
+	evaluacionPorMeta.IdEvaluacionAnual = 0
+	evaluacionPorMeta.TodasLasAreas = false
+
+	db.Create(&evaluacionPorMeta)
+
+	fmt.Println(evaluacionPorMeta.IdEvaluacionAnual)
+
+	var colaboradores []models.Usuario
+
+	db.Raw(" EXEC  usp_GetEquipoPorLider ?", evaluacionPorMeta.CreadaPor).Scan(&colaboradores)
+
+	var PreguntaModel models.PreguntasPorMetaModel
+	var PreguntasPorEvaluacionPorMeta models.PreguntasPorEvaluacionPorMeta
+
+	for _, pregunta := range evaluacionPorMeta.Preguntas {
+		PreguntaModel.IdPregunta = 0
+		PreguntaModel.Pregunta = pregunta.Pregunta
+		PreguntaModel.IdTipoRespuesta = pregunta.IdTipoRespuesta
+
+		db.Create(&PreguntaModel)
+
+		PreguntasPorEvaluacionPorMeta.IdPreguntasPorEvaluacionPorMeta = 0
+		PreguntasPorEvaluacionPorMeta.IdPregunta = PreguntaModel.IdPregunta
+		PreguntasPorEvaluacionPorMeta.IdEvaluacionAnual = evaluacionPorMeta.IdEvaluacionAnual
+		PreguntasPorEvaluacionPorMeta.Meta = pregunta.Meta
+
+		db.Create(&PreguntasPorEvaluacionPorMeta)
+	}
+
+	var PreguntasGuardadas []models.PreguntasPorEvaluacionPorMeta
+
+	db.Where("idEvaluacionAnual = ?", evaluacionPorMeta.IdEvaluacionAnual).Find(&PreguntasGuardadas)
+
+	for _, preguntaG := range PreguntasGuardadas {
+		for _, colaborador := range colaboradores {
+			if colaborador.Accion != "R" {
+
+				query := db.Raw("INSERT INTO RespuestasPorPregunta (idEvaluacionAnual, idEvaluacion, idPregunta, idDetallePregunta,idColaborador,Valor ) values (?,?,?,?,?,?)", evaluacionPorMeta.IdEvaluacionAnual, evaluacionPorMeta.IdEvaluacionAnual, preguntaG.IdPregunta, 0, colaborador.IdColaborador, 0).Scan(&result)
+				// db.Raw("INSERT INTO RespuestasPorPregunta (idEvaluacionAnual, idEvaluacion, idPregunta, idDetallePregunta,idColaborador,Meta,Valor ) values (?,?, ?,?,?,?,?)", evaluacionPorMeta.IdEvaluacionAnual, evaluacionPorMeta.IdEvaluacionAnual, preguntaG.IdPregunta, 0, colaborador.IdColaborador, 16, 0).Scan(&result)
+				fmt.Println(query.Error)
+
+				// if query.Error != nil {
+				// 	//tx.Rollback()
+				// 	panic(query.Error)
+
+				// }
+			}
+
+		}
+	}
+
+	return result, tx.Commit().Error
+	// return result, nil
 }
