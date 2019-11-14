@@ -199,3 +199,63 @@ func NuevaEvaluacionPorMeta(evaluacionPorMeta models.NuevaEvaluacionPorMeta) (mo
 	return result, tx.Commit().Error
 	// return result, nil
 }
+
+func GetEvaluacionMetaPorColaborador(idColaborador string, idPadre string) ([]models.EvaluacionMeta, error) {
+
+	var EvaluacionEnvia []models.EvaluacionMeta
+
+	type Result struct {
+		IdEvaluacionAnual int       `gorm:"column:idEvaluacionAnual"`
+		IdPadre           int       `gorm:"column:idPadre"`
+		Descripcion       string    `gorm:"column:Descripcion"`
+		FechaCreacion     time.Time `gorm:"column:FechaCreacion"`
+		CreadaPor         int       `gorm:"column:CreadaPor"`
+		NombreCreador     string    `gorm:"column:NombreCreador"`
+		TodoElEquipo      bool      `gorm:"column:TodoElEquipo"`
+		IdSubArea         int       `gorm:"column:idSubArea"`
+		TotalPreguntas    int       `gorm:"column:TotalPreguntas"`
+	}
+
+	var result []Result
+	db := config.ConnectDB()
+	defer db.Close()
+
+	db.Raw("EXEC usp_GetEvaluacionesPorMetaPorColaborador ?,?", idColaborador, idPadre).Scan(&result)
+	for _, dato := range result {
+
+		var Encabezado []models.PreguntasMeta
+		var EvaluacionTemp models.EvaluacionMeta
+
+		EvaluacionTemp.IdEvaluacionAnual = dato.IdEvaluacionAnual
+		EvaluacionTemp.IdPadre = dato.IdPadre
+		EvaluacionTemp.Descripcion = dato.Descripcion
+		EvaluacionTemp.FechaCreacion = dato.FechaCreacion
+		EvaluacionTemp.CreadaPor = dato.CreadaPor
+		EvaluacionTemp.NombreCreador = dato.NombreCreador
+		EvaluacionTemp.TodoElEquipo = dato.TodoElEquipo
+		EvaluacionTemp.IdSubArea = dato.IdSubArea
+		EvaluacionTemp.TotalPreguntas = dato.TotalPreguntas
+
+		db.Raw("EXEC usp_GetPreguntasPorEvaluacionPorMeta ?,?", dato.IdEvaluacionAnual, idColaborador).Scan(&Encabezado)
+
+		for _, Cabeza := range Encabezado {
+			//var Preguntas []models.Preguntas
+
+			// db.Raw("EXEC usp_GetPreguntasPorColaboradorYGrado ?,?", idColaborador, Cabeza.IdGradoPorCompetencia).Scan(&Preguntas)
+
+			// for _, Pregunt := range Preguntas {
+			// 	var Respuestas []models.Respuestas
+
+			// 	db.Raw("EXEC usp_GetRespuestasPorPregunta ?,?,?,?", Pregunt.IdTipoRespuesta, Pregunt.IdPregunta, idColaborador, idEvaluacionAnual).Scan(&Respuestas)
+			// 	for _, Respu := range Respuestas {
+			// 		Pregunt.Respuestas = append(Pregunt.Respuestas, Respu)
+			// 	}
+
+			// 	Cabeza.Preguntas = append(Cabeza.Preguntas, Pregunt)
+			// }
+			EvaluacionTemp.PreguntasMeta = append(EvaluacionTemp.PreguntasMeta, Cabeza)
+		}
+		EvaluacionEnvia = append(EvaluacionEnvia, EvaluacionTemp)
+	}
+	return EvaluacionEnvia, nil
+}
