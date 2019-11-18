@@ -5,10 +5,11 @@ import (
 )
 
 type EvaluacionCompletada struct {
-	IdColaborador int
-	IdEvaluacion  int
-	EvaluadoPor   int
-	Respuestas    []RespuestasCompletadas
+	IdColaborador     int
+	IdEvaluacionAnual int
+	EvaluacionId      int
+	EvaluadoPor       int
+	Respuestas        []RespuestasCompletadas
 }
 
 type RespuestasCompletadas struct {
@@ -16,4 +17,5 @@ type RespuestasCompletadas struct {
 	TxtComentario          string
 	IdRespuestaPorPregunta int
 	IdRespuesta            int
+	Valor                  int
 }

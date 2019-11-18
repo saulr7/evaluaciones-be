@@ -51,16 +51,14 @@ type EvaluacionAnual struct {
 	Desde             time.Time `gorm:"column:Desde"`
 	Hasta             time.Time `gorm:"column:Hasta"`
 	CreadaPor         int       `gorm:"column:CreadaPor"`
-	// NombreCreador     string    `gorm:"column:NombreCreador"`
 	FechaCreacion     time.Time `gorm:"column:FechaCreacion"`
 	FechaModificacion time.Time `gorm:"column:FechaModificacion"`
 	ModificadaPor     int       `gorm:"column:ModificadaPor"`
-	// NombreModifico    string    `gorm:"column:NombreModifico"`
-	IdSubArea     int  `gorm:"column:idSubArea"`
-	TodasLasAreas bool `gorm:"column:TodasLasAreas"`
-	IdPadre       int  `gorm:"column:idPadre"`
-	TodoElEquipo  bool `gorm:"column:TodoElEquipo"`
-	Estado        bool `gorm:"column:Estado"`
+	IdSubArea         int       `gorm:"column:idSubArea"`
+	TodasLasAreas     bool      `gorm:"column:TodasLasAreas"`
+	IdPadre           int       `gorm:"column:idPadre"`
+	TodoElEquipo      bool      `gorm:"column:TodoElEquipo"`
+	Estado            bool      `gorm:"column:Estado"`
 }
 
 func (EvaluacionAnual) TableName() string {
@@ -69,15 +67,18 @@ func (EvaluacionAnual) TableName() string {
 
 type EvaluacionMeta struct {
 	IdEvaluacionAnual int       `gorm:"column:idEvaluacionAnual"`
+	IdEvaluacion      int       `gorm:"column:idEvaluacion"`
 	IdPadre           int       `gorm:"column:idPadre"`
 	Descripcion       string    `gorm:"column:Descripcion"`
+	Titulo            string    `gorm:"column:Titulo"`
 	FechaCreacion     time.Time `gorm:"column:FechaCreacion"`
 	CreadaPor         int       `gorm:"column:CreadaPor"`
 	NombreCreador     string    `gorm:"column:NombreCreador"`
 	TodoElEquipo      bool      `gorm:"column:TodoElEquipo"`
 	IdSubArea         int       `gorm:"column:idSubArea"`
 	TotalPreguntas    int       `gorm:"column:TotalPreguntas"`
-	PreguntasMeta     []PreguntasMeta
+	Completo          bool      `gorm:"column:Completo"`
+	PreguntasMeta     []PreguntasPorMetaContestadas
 }
 
 type PreguntasMeta struct {

@@ -18,6 +18,13 @@ type PreguntasPorMetaModel struct {
 	IdPregunta      int    `gorm:"column:idPregunta;AUTO_INCREMENT"`
 	Pregunta        string `gorm:"column:Pregunta"`
 	IdTipoRespuesta int    `gorm:"column:idTipoRespuesta"`
+	Peso            int    `gorm:"column:Peso"`
+}
+
+type PreguntasPorMetaContestadas struct {
+	Valor      int    `gorm:"column:Valor"`
+	Comentario string `gorm:"column:Comentario"`
+	PreguntasPorMetaModel
 }
 
 type PreguntasPorEvaluacionPorMeta struct {
@@ -32,7 +39,7 @@ func (PreguntasPorEvaluacionPorMeta) TableName() string {
 }
 
 func (PreguntasPorMetaModel) TableName() string {
-	return "preguntas "
+	return "Preguntas "
 }
 
 type Evaluaciones struct {
@@ -42,9 +49,23 @@ type Evaluaciones struct {
 	Anio              int    `gorm:"column:Anio"`
 	IdGrado           int    `gorm:"column:idGrado"`
 	Completo          bool   `gorm:"column:Completo"`
-	Estado            int    `gorm:"column:Estado"`
+	Estado            bool   `gorm:"column:Estado"`
 }
 
 func (Evaluaciones) TableName() string {
 	return "Evaluaciones"
+}
+
+type RespuestasPorPreguntas struct {
+	IdRespuestaPorPregunta int `gorm:"column:idRespuestasPorPregunta;AUTO_INCREMENT"`
+	IdEvaluacionAnual      int `gorm:"column:idEvaluacionAnual"`
+	IdEvaluacion           int `gorm:"column:idEvaluacion"`
+	IdPregunta             int `gorm:"column:idPregunta"`
+	IdDetallePregunta      int `gorm:"column:idDetallePregunta"`
+	IdColaborador          int `gorm:"column:idColaborador"`
+	Valor                  int `gorm:"column:Valor"`
+}
+
+func (RespuestasPorPreguntas) TableName() string {
+	return "RespuestasPorPregunta"
 }
