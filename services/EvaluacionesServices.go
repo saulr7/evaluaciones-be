@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -110,18 +111,34 @@ func GuardarEvaluacionCompletada(evaluacionCompletada models.EvaluacionCompletad
 func NuevaEvaluacionPorMeta(evaluacionPorMeta models.NuevaEvaluacionPorMeta) (models.EvaluacionAnual, error) {
 
 	var result models.EvaluacionAnual
+	var resultEvaluacionIndividuales []models.EvaluacionAnual
 
 	db := config.ConnectDB()
 	defer db.Close()
 
-	// tx := db.Begin()
+	db.Raw(" SELECT * FROM EvaluacionesAnuales WHERE idPadre = ? AND idSubArea  = ?", evaluacionPorMeta.IdPadre, evaluacionPorMeta.IdSubArea).Scan(&result)
 
-	// defer func() {
-	// 	if r := recover(); r != nil {
-	// 		tx.Rollback()
+	if evaluacionPorMeta.TodoElEquipo {
 
-	// 	}
-	// }()
+		if result.IdEvaluacionAnual != 0 {
+			return result, errors.New("Ya se ha registrado una evaluación para todo el equipo de esta área ")
+		}
+
+	} else {
+
+		var colaboradoresList []string
+
+		for _, colaborad := range evaluacionPorMeta.Colaboradores {
+			colaboradoresList = append(colaboradoresList, colaborad.IdColaborador)
+		}
+
+		db.Raw("select * from Evaluaciones where  idEvaluacionAnual = ? and idColaborador in (?)", result.IdEvaluacionAnual, colaboradoresList).Scan(&resultEvaluacionIndividuales)
+
+		if len(resultEvaluacionIndividuales) > 0 {
+
+			return result, errors.New("Hay colaboradores que ya tienen una subevaluación para esta evaluación ")
+		}
+	}
 
 	db.Raw(" SELECT * FROM EvaluacionesAnuales WHERE idEvaluacionAnual = ?", evaluacionPorMeta.IdEvaluacionAnual).Scan(&result)
 
@@ -136,11 +153,6 @@ func NuevaEvaluacionPorMeta(evaluacionPorMeta models.NuevaEvaluacionPorMeta) (mo
 
 	db.Create(&evaluacionPorMeta)
 
-	var colaboradores []models.Usuario
-
-	db.Raw(" EXEC  usp_GetEquipoPorLider ?", evaluacionPorMeta.CreadaPor).Scan(&colaboradores)
-
-	// var PreguntaModel models.PreguntasPorMetaModel
 	var PreguntasPorEvaluacionPorMeta models.PreguntasPorEvaluacionPorMeta
 
 	for _, pregunta := range evaluacionPorMeta.Preguntas {
@@ -150,10 +162,8 @@ func NuevaEvaluacionPorMeta(evaluacionPorMeta models.NuevaEvaluacionPorMeta) (mo
 		PreguntaModel.Pregunta = pregunta.Pregunta
 		PreguntaModel.IdTipoRespuesta = pregunta.IdTipoRespuesta
 
-		db.NewRecord(&PreguntaModel)
+		// db.NewRecord(&PreguntaModel)
 		db.Create(&PreguntaModel)
-
-		fmt.Println(PreguntaModel.IdPregunta)
 
 		PreguntasPorEvaluacionPorMeta.IdPreguntasPorEvaluacionPorMeta = 0
 		PreguntasPorEvaluacionPorMeta.IdPregunta = PreguntaModel.IdPregunta
@@ -168,6 +178,14 @@ func NuevaEvaluacionPorMeta(evaluacionPorMeta models.NuevaEvaluacionPorMeta) (mo
 
 	db.Where("idEvaluacionAnual = ?", evaluacionPorMeta.IdEvaluacionAnual).Find(&PreguntasGuardadas)
 
+	var colaboradores []models.Usuario
+
+	if evaluacionPorMeta.TodoElEquipo {
+		db.Raw(" EXEC  usp_GetEquipoPorLider ?", evaluacionPorMeta.CreadaPor).Scan(&colaboradores)
+	} else {
+		colaboradores = evaluacionPorMeta.Colaboradores
+	}
+
 	for _, colaborador := range colaboradores {
 		var nuevaEvaluacion models.Evaluaciones
 
@@ -179,10 +197,18 @@ func NuevaEvaluacionPorMeta(evaluacionPorMeta models.NuevaEvaluacionPorMeta) (mo
 			nuevaEvaluacion.Completo = false
 			nuevaEvaluacion.Estado = true
 			db.Create(&nuevaEvaluacion)
+
+			if evaluacionPorMeta.TodoElEquipo == false {
+				fmt.Println("Entro")
+				var evaluacionMetaColaborador models.EvaluacionPorMetaPorColaborador
+				evaluacionMetaColaborador.IdEvaluacionPorMetaPorColaborador = 0
+				evaluacionMetaColaborador.IdColaborador = colaborador.IdColaborador
+				evaluacionMetaColaborador.IdEvaluacionPorMeta = evaluacionPorMeta.IdEvaluacionAnual
+				db.Create(&evaluacionMetaColaborador)
+			}
 		}
 	}
 
-	// return result, tx.Commit().Error
 	return result, nil
 }
 

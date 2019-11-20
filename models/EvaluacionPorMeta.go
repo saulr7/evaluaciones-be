@@ -6,7 +6,8 @@ import (
 
 type NuevaEvaluacionPorMeta struct {
 	EvaluacionAnual
-	Preguntas []PreguntasPorMeta
+	Preguntas     []PreguntasPorMeta
+	Colaboradores []Usuario
 }
 
 type PreguntasPorMeta struct {
@@ -19,6 +20,16 @@ type PreguntasPorMetaModel struct {
 	Pregunta        string `gorm:"column:Pregunta"`
 	IdTipoRespuesta int    `gorm:"column:idTipoRespuesta"`
 	Peso            int    `gorm:"column:Peso"`
+}
+
+type EvaluacionPorMetaPorColaborador struct {
+	IdEvaluacionPorMetaPorColaborador int    `gorm:"column:idEvaluacionPorMetaPorColaborador;AUTO_INCREMENT"`
+	IdEvaluacionPorMeta               int    `gorm:"column:idEvaluacionPorMeta"`
+	IdColaborador                     string `gorm:"column:idColaborador"`
+}
+
+func (EvaluacionPorMetaPorColaborador) TableName() string {
+	return "EvaluacionPorMetaPorColaborador "
 }
 
 type PreguntasPorMetaContestadas struct {

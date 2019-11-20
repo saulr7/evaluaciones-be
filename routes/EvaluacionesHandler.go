@@ -92,7 +92,7 @@ func NuevaEvaluacionPorMetaHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintln(w, "Credenciales incorrectas")
+		fmt.Fprintln(w, "Los datos proporcionados no son correctos")
 		return
 	}
 

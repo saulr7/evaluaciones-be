@@ -13,7 +13,8 @@ import (
 )
 
 type Claims struct {
-	Usuario models.Usuario `json:"usuario"`
+	Usuario models.Usuario     `json:"usuario"`
+	Menu    []models.MenuModel `json:"menu"`
 	jwt.StandardClaims
 }
 
@@ -22,9 +23,11 @@ var jwtKey = []byte("Un4M4s@cr33sL4M3j0r0pc!0n")
 func Create_JWT(usuario models.Usuario) (string, error) {
 
 	expirationTime := time.Now().Add(480 * time.Minute)
+	OpcionesMenu, _ := GetOpcionesDeMenu(usuario.IdColaborador)
 
 	claims := &Claims{
 		Usuario: usuario,
+		Menu:    OpcionesMenu,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},

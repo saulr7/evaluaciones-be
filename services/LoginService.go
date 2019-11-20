@@ -20,7 +20,7 @@ func Login(credenciales models.UsuarioCredenciales) (string, error) {
 
 	fmt.Println(result)
 
-	if result.IdColaborador == "" {
+	if result.IdColaborador == "" || result.IdColaborador == "0" {
 
 		return "", errors.New("Credenciales incorrectas")
 	}
