@@ -28,3 +28,15 @@ func GetEquipoEvaluacion(idColaborador string, idEvaluacionAnual string) ([]mode
 
 	return result, nil
 }
+
+func GetEquipoCajeros(idColaborador string) ([]models.UsuarioCajeros, error) {
+
+	var result []models.UsuarioCajeros
+
+	db := config.ConnectDB()
+	defer db.Close()
+
+	db.Raw("EXEC usp_GetEquipoCajeros ?", idColaborador).Scan(&result)
+
+	return result, nil
+}

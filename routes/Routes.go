@@ -12,6 +12,7 @@ func Routes() *mux.Router {
 	myRouter.HandleFunc("/login", LoginHandler)
 	myRouter.HandleFunc("/GetColaboradoresEquipo/{idColaborador}", GetColaboradoresEquipo).Methods("GET")
 	myRouter.HandleFunc("/GetEquipoEvaluacion/{idColaborador}/{idEvaluacionAnual}", GetEquipoEvaluacion).Methods("GET")
+	myRouter.HandleFunc("/GetEquipoCajeros/{idColaborador}", GetEquipoCajeros).Methods("GET")
 	myRouter.HandleFunc("/reasignaciones", GetReasignaciones).Methods("GET")
 	myRouter.HandleFunc("/deleteReasignacion/{idAsignacion}", DeleteReasignacion).Methods("GET")
 	myRouter.HandleFunc("/SubAreas", SubAreas).Methods("GET")
