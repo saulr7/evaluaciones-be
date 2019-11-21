@@ -20,6 +20,7 @@ type Evaluacion struct {
 
 type EncabezadoPreguntas struct {
 	IdGradoPorCompetencia int    `gorm:"column:idGradoPorCompetencia"`
+	Descripcion           string `gorm:"column:Descripcion"`
 	Detalle               string `gorm:"column:Detalle"`
 	GradoPuesto           string `gorm:"column:GradoPuesto"`
 	Nivel                 string `gorm:"column:Nivel"`
