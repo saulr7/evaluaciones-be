@@ -14,7 +14,8 @@ type Usuario struct {
 
 type UsuarioPorcentaje struct {
 	Usuario
-	Completo bool `gorm:"column:Completo"`
+	Completo         bool `gorm:"column:Completo"`
+	AceptoEvaluacion bool `gorm:"column:AceptoEvaluacion"`
 }
 
 type UsuarioCajeros struct {
