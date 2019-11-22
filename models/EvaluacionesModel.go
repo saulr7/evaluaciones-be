@@ -93,6 +93,8 @@ type PreguntasMeta struct {
 
 type EvaluacionAnualCompleta struct {
 	EvaluacionAnual
-	NombreEvaluo    string    `gorm:"column:NombreEvaluo"`
-	FechaCompletado time.Time `gorm:"column:FechaCompletado"`
+	NombreEvaluo     string    `gorm:"column:NombreEvaluo"`
+	FechaCompletado  time.Time `gorm:"column:FechaCompletado"`
+	AceptoEvaluacion bool      `gorm:"column:AceptoEvaluacion"`
+	FechaAcepto      time.Time `gorm:"column:FechaAcepto"`
 }
