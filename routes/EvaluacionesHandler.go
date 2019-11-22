@@ -147,8 +147,6 @@ func GetEvaluacionMetaPorColaborador(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, _ := json.Marshal(&Resultados)
-	// responseString :=
-
 	fmt.Fprint(w, string(response))
 }
 
@@ -164,7 +162,23 @@ func GetEvaluacionesTodasHanlder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, _ := json.Marshal(&Resultados)
-	// responseString :=
+	fmt.Fprint(w, string(response))
+}
 
+func AceptarEvaluacionHanlder(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	idEvaluacion := vars["idEvaluacion"]
+
+	var Resultados, erro = services.AceptarEvaluacion(idEvaluacion)
+
+	if erro != nil {
+		fmt.Println(erro)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, erro)
+		return
+	}
+
+	response, _ := json.Marshal(&Resultados)
 	fmt.Fprint(w, string(response))
 }

@@ -252,3 +252,15 @@ func GetEvaluacionsTodas() ([]models.EvaluacionAnual, error) {
 
 	return evaluaciones, nil
 }
+
+func AceptarEvaluacion(IdEvaluacion string) (models.Evaluacion, error) {
+
+	var result models.Evaluacion
+
+	db := config.ConnectDB()
+	defer db.Close()
+
+	db.Raw("UPDATE Evaluaciones SET AceptoEvaluacion = 1,FechaAcepto = GETDATE() WHERE idEvaluacion = ?", IdEvaluacion).Scan(&result)
+
+	return result, nil
+}
