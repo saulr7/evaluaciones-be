@@ -14,14 +14,16 @@ func GetEvaluacionPorColaborador(idColaborador string, idEvaluacionAnual string)
 	var EvaluacionEnvia []models.Evaluacion
 
 	type Result struct {
-		IdEvaluacion      int    `gorm:"column:idEvaluacion"`
-		IdEvaluacionAnual int    `gorm:"column:idEvaluacionAnual"`
-		IdColaborador     int    `gorm:"column:idColaborador"`
-		Anio              int    `gorm:"column:Anio"`
-		IdGrado           int    `gorm:"column:idGrado"`
-		Completo          bool   `gorm:"column:Completo"`
-		Titulo            string `gorm:"column:Titulo"`
-		Descripcion       string `gorm:"column:Descripcion"`
+		IdEvaluacion      int       `gorm:"column:idEvaluacion"`
+		IdEvaluacionAnual int       `gorm:"column:idEvaluacionAnual"`
+		IdColaborador     int       `gorm:"column:idColaborador"`
+		Anio              int       `gorm:"column:Anio"`
+		IdGrado           int       `gorm:"column:idGrado"`
+		Completo          bool      `gorm:"column:Completo"`
+		Titulo            string    `gorm:"column:Titulo"`
+		Descripcion       string    `gorm:"column:Descripcion"`
+		AceptoEvaluacion  bool      `gorm:"column:AceptoEvaluacion"`
+		FechaAcepto       time.Time `gorm:"column:FechaAcepto"`
 	}
 
 	var result []Result
@@ -42,6 +44,8 @@ func GetEvaluacionPorColaborador(idColaborador string, idEvaluacionAnual string)
 		EvaluacionTemp.Completo = dato.Completo
 		EvaluacionTemp.Titulo = dato.Titulo
 		EvaluacionTemp.Descripcion = dato.Descripcion
+		EvaluacionTemp.AceptoEvaluacion = dato.AceptoEvaluacion
+		EvaluacionTemp.FechaAcepto = dato.FechaAcepto
 
 		db.Raw("EXEC usp_GetEncabezadosPorColaborador ?,?", idColaborador, idEvaluacionAnual).Scan(&Encabezado)
 
