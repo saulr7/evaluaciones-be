@@ -7,14 +7,16 @@ import (
 )
 
 type Evaluacion struct {
-	IdEvaluacion        int    `gorm:"column:idEvaluacion"`
-	IdEvaluacionAnual   int    `gorm:"column:idEvaluacionAnual"`
-	IdColaborador       int    `gorm:"column:idColaborador"`
-	Anio                int    `gorm:"column:Anio"`
-	IdGrado             int    `gorm:"column:idGrado"`
-	Completo            bool   `gorm:"column:Completo"`
-	Titulo              string `gorm:"column:Titulo"`
-	Descripcion         string `gorm:"column:Descripcion"`
+	IdEvaluacion        int       `gorm:"column:idEvaluacion"`
+	IdEvaluacionAnual   int       `gorm:"column:idEvaluacionAnual"`
+	IdColaborador       int       `gorm:"column:idColaborador"`
+	Anio                int       `gorm:"column:Anio"`
+	IdGrado             int       `gorm:"column:idGrado"`
+	Completo            bool      `gorm:"column:Completo"`
+	Titulo              string    `gorm:"column:Titulo"`
+	Descripcion         string    `gorm:"column:Descripcion"`
+	AceptoEvaluacion    bool      `gorm:"column:AceptoEvaluacion"`
+	FechaAcepto         time.Time `gorm:"column:FechaAcepto"`
 	EncabezadoPreguntas []EncabezadoPreguntas
 }
 
@@ -93,8 +95,6 @@ type PreguntasMeta struct {
 
 type EvaluacionAnualCompleta struct {
 	EvaluacionAnual
-	NombreEvaluo     string    `gorm:"column:NombreEvaluo"`
-	FechaCompletado  time.Time `gorm:"column:FechaCompletado"`
-	AceptoEvaluacion bool      `gorm:"column:AceptoEvaluacion"`
-	FechaAcepto      time.Time `gorm:"column:FechaAcepto"`
+	NombreEvaluo    string    `gorm:"column:NombreEvaluo"`
+	FechaCompletado time.Time `gorm:"column:FechaCompletado"`
 }
