@@ -32,3 +32,15 @@ func GetColaboradoresSubArea(IdSubArea string) ([]models.Colaborador, error) {
 
 	return result, nil
 }
+
+func GetAdminEvaluaciones() ([]models.Colaborador, error) {
+
+	var result []models.Colaborador
+
+	db := config.ConnectDB()
+	defer db.Close()
+
+	db.Raw("EXEC usp_GetAdminsEvaluaciones").Scan(&result)
+
+	return result, nil
+}

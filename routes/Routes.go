@@ -29,6 +29,7 @@ func Routes() *mux.Router {
 	myRouter.HandleFunc("/GetColaboradoresPendientesCompletarEvaluacion/{idEvaluacionAnual}", ColaboradoresPendientesCompletarEvaluacionHanlder).Methods("GET")
 	myRouter.HandleFunc("/GetEvaluacionesTodas", GetEvaluacionesTodasHanlder).Methods("GET")
 	myRouter.HandleFunc("/GetOpcionesDeMenu/{idColaborador}", OpcionesDeMenuHandler).Methods("GET")
+	myRouter.HandleFunc("/AceptarEvaluacion/{idEvaluacion}", AceptarEvaluacionHanlder).Methods("GET")
 
 	return myRouter
 }
