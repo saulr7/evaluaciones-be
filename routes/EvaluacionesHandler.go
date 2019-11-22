@@ -58,6 +58,27 @@ func GetEvaluacionAnual(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, responseString)
 }
 
+func GetEvaluacionesCompletas(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	idColaborador := vars["idColaborador"]
+
+	var Resultados, erro = services.GetEvaluacionesCompletas(idColaborador)
+
+	if erro != nil {
+		fmt.Println(erro)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, erro)
+		return
+	}
+
+	response, _ := json.Marshal(&Resultados)
+
+	responseString := string(response)
+
+	fmt.Fprint(w, responseString)
+}
+
 func EvaluacionCompletadaHandler(w http.ResponseWriter, r *http.Request) {
 
 	var evaluacionCompletada models.EvaluacionCompletada

@@ -79,6 +79,18 @@ func GetEvaluacionAnual(idColaborador string) ([]models.EvaluacionAnual, error) 
 	return result, nil
 }
 
+func GetEvaluacionesCompletas(idColaborador string) ([]models.EvaluacionAnualCompleta, error) {
+
+	var result []models.EvaluacionAnualCompleta
+
+	db := config.ConnectDB()
+	defer db.Close()
+
+	db.Raw("EXEC usp_GetEvaluacionesAplicadasPorColaborador ?", idColaborador).Scan(&result)
+
+	return result, nil
+}
+
 func GuardarEvaluacionCompletada(evaluacionCompletada models.EvaluacionCompletada) (bool, error) {
 
 	var result []models.EvaluacionAnual

@@ -90,3 +90,9 @@ type PreguntasMeta struct {
 	Meta                            int    `gorm:"column:Meta"`
 	Valor                           int    `gorm:"column:Valor"`
 }
+
+type EvaluacionAnualCompleta struct {
+	EvaluacionAnual
+	NombreEvaluo    string    `gorm:"column:NombreEvaluo"`
+	FechaCompletado time.Time `gorm:"column:FechaCompletado"`
+}
