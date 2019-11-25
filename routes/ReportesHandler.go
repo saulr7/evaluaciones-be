@@ -48,3 +48,24 @@ func ColaboradoresPendientesCompletarEvaluacionHanlder(w http.ResponseWriter, r 
 
 	fmt.Fprint(w, string(response))
 }
+
+func GetRptCompetencias(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	idColaborador := vars["idColaborador"]
+
+	var Resultados, erro = services.GetRptCompetencias(idColaborador)
+
+	if erro != nil {
+		fmt.Println(erro)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, erro)
+		return
+	}
+
+	response, _ := json.Marshal(&Resultados)
+
+	responseString := string(response)
+
+	fmt.Fprint(w, responseString)
+}
