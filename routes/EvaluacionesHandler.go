@@ -12,11 +12,6 @@ import (
 
 func GetEvaluacionPorColaborador(w http.ResponseWriter, r *http.Request) {
 
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.Header().Set("Access-Control-Expose-Headers: Content-Length", "X-JSON")
-	w.Header().Set("Access-Control-Allow-Headers", "*")
-	w.Header().Set("Content-type", "Application/json")
-
 	vars := mux.Vars(r)
 	idColaborador := vars["idColaborador"]
 	idEvaluacionAnual := vars["idEvaluacionAnual"]
@@ -87,7 +82,7 @@ func EvaluacionCompletadaHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintln(w, "Credenciales incorrectas")
+		fmt.Fprintln(w, "Datos incorrectos")
 		return
 	}
 
@@ -181,4 +176,30 @@ func AceptarEvaluacionHanlder(w http.ResponseWriter, r *http.Request) {
 
 	response, _ := json.Marshal(&Resultados)
 	fmt.Fprint(w, string(response))
+}
+
+func NuevaEvaluacionAnualHandler(w http.ResponseWriter, r *http.Request) {
+
+	var evaluacion models.EvaluacionAnual
+	err := json.NewDecoder(r.Body).Decode(&evaluacion)
+
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, "Datos incorrectos")
+		return
+	}
+
+	var respuesta, erro = services.NuevaEvaluacionAnual(evaluacion)
+
+	if erro != nil {
+		fmt.Println(erro)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, erro)
+		return
+	}
+
+	response, _ := json.Marshal(&respuesta)
+
+	fmt.Fprintf(w, string(response))
 }

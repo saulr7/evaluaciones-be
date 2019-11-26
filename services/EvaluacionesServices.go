@@ -268,3 +268,23 @@ func AceptarEvaluacion(IdEvaluacion string) (models.Evaluacion, error) {
 
 	return result, nil
 }
+
+func NuevaEvaluacionAnual(modelo models.EvaluacionAnual) (models.EvaluacionAnual, error) {
+
+	var result models.EvaluacionAnual
+	modelo.FechaCreacion = time.Now()
+	modelo.FechaModificacion = time.Now()
+
+	db := config.ConnectDB()
+	defer db.Close()
+
+	db.Create(&modelo).Scan(&result)
+
+	if modelo.IdEvaluacionAnual > 0 {
+		db.Raw(" exec usp_CrearEvaluacionesAnuales ?", time.Now().Year()).Scan(&result)
+	}
+
+	fmt.Println(modelo.IdEvaluacionAnual)
+
+	return result, nil
+}
