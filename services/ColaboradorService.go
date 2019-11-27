@@ -44,3 +44,15 @@ func GetAdminEvaluaciones() ([]models.Colaborador, error) {
 
 	return result, nil
 }
+
+func GetColaboradorInfoCompleta(IdColaborador string) ([]models.Colaborador, error) {
+
+	var result []models.Colaborador
+
+	db := config.ConnectDB()
+	defer db.Close()
+
+	db.Raw("EXEC usp_ColaboradorInfoCompleta ?", IdColaborador).Scan(&result)
+
+	return result, nil
+}
