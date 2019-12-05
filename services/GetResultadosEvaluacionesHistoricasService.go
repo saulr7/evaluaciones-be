@@ -11,10 +11,10 @@ func GetResultadosEvaluacionesHistoricas(idColaborador string) (models.Resultado
 	var colaborador models.ColaboradorInformacionCompleta
 	var resultados []models.ResultadoEvaluacion
 
-	db4DX := config.ConnectDB4DX()
+	db4DX := config.ConnectDBEO()
 	defer db4DX.Close()
 
-	db4DX.Raw("exec usp_ColaboradorInfoCompleta  ?", idColaborador).Scan(&colaborador)
+	db4DX.Raw("exec usp_getColaboradorInfoCompleta  ?", idColaborador).Scan(&colaborador)
 
 	db := config.ConnectDB()
 	defer db.Close()

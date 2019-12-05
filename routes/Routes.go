@@ -34,5 +34,18 @@ func Routes() *mux.Router {
 	myRouter.HandleFunc("/GetRptCompetencias/{idColaborador}", GetRptCompetencias).Methods("GET")
 	myRouter.HandleFunc("/GetGetAreasConSuGrado", GetGetAreasConSuGrado).Methods("GET")
 	myRouter.HandleFunc("/GetGetGrados", GetGetGrados).Methods("GET")
+	myRouter.HandleFunc("/UpdateGradoArea", UpdateGradoAreaHandler).Methods("POST")
+	myRouter.HandleFunc("/GetRptResumenGeneral/{idEvaluacionAnual}", GetRptResumenGeneralHandler).Methods("GET")
+	myRouter.HandleFunc("/GetCargosGrados", GetCargosGradosHandler).Methods("GET")
+	myRouter.HandleFunc("/UpdateCargosGrados", UpdateCargosGradosHandler).Methods("POST")
+	myRouter.HandleFunc("/GetCargos", GetCargosHandler).Methods("GET")
+	myRouter.HandleFunc("/GetColaboradoresPorCargo/{CargoId}", GetColaboradoresPorCargoHandler).Methods("GET")
+	myRouter.HandleFunc("/GetColaboradoresInfo", GetColaboradoresInfoHandler).Methods("GET")
+	myRouter.HandleFunc("/UpdateColaboradorActivar", UpdateColaboradorActivarHandler).Methods("POST")
+	myRouter.HandleFunc("/NuevoColaborador", CreateColaboradorHandler).Methods("POST")
+	myRouter.HandleFunc("/GetCargosConPadreYEmpresa", GetCargoPadreYEmpresHandler).Methods("GET")
+	myRouter.HandleFunc("/GetAreas", GetAreasHandler).Methods("GET")
+	myRouter.HandleFunc("/NewCargo", NewCargoHandler).Methods("POST")
+	myRouter.HandleFunc("/getColaboradoresPorArea/{AreaId}", GetColaboradoresPorAreaHandler).Methods("GET")
 	return myRouter
 }

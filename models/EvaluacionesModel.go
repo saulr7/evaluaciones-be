@@ -16,6 +16,7 @@ type Evaluacion struct {
 	Titulo              string    `gorm:"column:Titulo"`
 	Descripcion         string    `gorm:"column:Descripcion"`
 	AceptoEvaluacion    bool      `gorm:"column:AceptoEvaluacion"`
+	PermiteGuardar      bool      `gorm:"column:PermiteGuardar"`
 	FechaAcepto         time.Time `gorm:"column:FechaAcepto"`
 	EncabezadoPreguntas []EncabezadoPreguntas
 }

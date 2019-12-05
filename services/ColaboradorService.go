@@ -56,3 +56,91 @@ func GetColaboradorInfoCompleta(IdColaborador string) ([]models.Colaborador, err
 
 	return result, nil
 }
+
+func GetCargosGrados() ([]models.CargoGradoModel, error) {
+
+	var result []models.CargoGradoModel
+
+	db := config.ConnectDB()
+	defer db.Close()
+
+	db.Raw("EXEC usp_GetCargoGrado").Scan(&result)
+
+	return result, nil
+}
+
+func UpdateCargosGradosService(modelo models.CargoGradoActualizarModel) ([]models.CargoGradoActualizarModel, error) {
+
+	var result []models.CargoGradoActualizarModel
+
+	db := config.ConnectDB()
+	defer db.Close()
+
+	for _, cargo := range modelo.Cargos {
+
+		db.Raw("EXEC usp_UpdateGradoPorCargo ? , ?", modelo.IdGrado, cargo).Scan(&result)
+	}
+
+	return result, nil
+}
+
+func GetColaboradoresPorCargo(CargoId string) ([]models.Colaborador, error) {
+
+	var result []models.Colaborador
+
+	db := config.ConnectDBEO()
+	defer db.Close()
+
+	db.Raw("EXEC usp_GetColaboradoresPorCargo ? ", CargoId).Scan(&result)
+
+	return result, nil
+}
+
+func GetColaboradoresPorArea(AreaId string) ([]models.Colaborador, error) {
+
+	var result []models.Colaborador
+
+	db := config.ConnectDBEO()
+	defer db.Close()
+
+	db.Raw("EXEC usp_GetColaboradoresPorArea ? ", AreaId).Scan(&result)
+
+	return result, nil
+}
+
+func GetColaboradoresInfo() ([]models.ColaboradorInfo, error) {
+
+	var result []models.ColaboradorInfo
+
+	db := config.ConnectDBEO()
+	defer db.Close()
+
+	db.Raw("EXEC usp_GetColaboradores ").Scan(&result)
+
+	return result, nil
+}
+
+func UpdateColaboradorActivar(colaboradorId string, Activar bool, ModificadoPor string) (models.ColaboradorInfo, error) {
+
+	var result models.ColaboradorInfo
+
+	db := config.ConnectDBEO()
+	defer db.Close()
+
+	db.Raw("EXEC usp_ToggleActivarColaborador ?, ?, ?", colaboradorId, Activar, ModificadoPor).Scan(&result)
+
+	return result, nil
+}
+
+func CreateColaboradorService(modelo models.NuevoColaboradorModel) (models.NuevoColaboradorModel, error) {
+
+	var result models.NuevoColaboradorModel
+
+	db := config.ConnectDBEO()
+	defer db.Close()
+
+	db.Raw("EXEC usp_CreateColaborador ?, ?, ?, ?", modelo.IdColaborador, modelo.Nombre, modelo.FechaIngreso, modelo.AgregadoPor).Scan(&result)
+	db.Raw("EXEC usp_UpdateColaboradorCargo ?, ?, ?", modelo.IdColaborador, modelo.IdCargo, modelo.AgregadoPor).Scan(&result)
+
+	return result, nil
+}

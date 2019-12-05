@@ -9,8 +9,8 @@ import (
 type Reasignacion struct {
 	IdAsignacion      int       `gorm:"column:idAsignacion;AUTO_INCREMENT"`
 	IdColaborador     string    `gorm:"column:idColaborador"`
-	IdSubAreaResta    int       `gorm:"column:idSubAreaResta"`
-	IdSubAreaSuma     int       `gorm:"column:idSubAreaSuma"`
+	IdCargoResta      int       `gorm:"column:idCargoResta"`
+	IdCargoSuma       int       `gorm:"column:idCargoSuma"`
 	IdUsuarioModifico string    `gorm:"column:idUsuarioModifico"`
 	FechaModificacion time.Time `gorm:"column:FechaModificacion"`
 	Activo            bool      `gorm:"column:Activo;DEFAULT:1"`
@@ -26,5 +26,5 @@ type ReasignacionDetallada struct {
 }
 
 func (Reasignacion) TableName() string {
-	return "dbReasignaciones"
+	return "Reasignaciones"
 }

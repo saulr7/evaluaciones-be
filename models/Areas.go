@@ -14,3 +14,8 @@ type Areas struct {
 	GradoPuesto     string `gorm:"column:GradoPuesto"`
 	Nivel           string `gorm:"column:Nivel"`
 }
+
+type AreaModel struct {
+	IdArea int    `gorm:"column:Id"`
+	Area   string `gorm:"column:Area"`
+}

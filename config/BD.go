@@ -35,3 +35,17 @@ func ConnectDB4DX() *gorm.DB {
 
 	return db
 }
+
+func ConnectDBEO() *gorm.DB {
+	db, err := gorm.Open("mssql", "sqlserver://app_4dxtablero:app_4dxtablero@des-cobbe01:1433?database=EstructuraOrganizacional")
+
+	if err != nil {
+		fmt.Println("Algo salió mal")
+		panic(err)
+	}
+
+	db.LogMode(true)
+	db.SingularTable(true)
+
+	return db
+}

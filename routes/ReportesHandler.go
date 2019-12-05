@@ -25,9 +25,7 @@ func GetResultadosEvaluacionesHistoricasHandler(w http.ResponseWriter, r *http.R
 
 	response, _ := json.Marshal(&Resultados)
 
-	responseString := string(response)
-
-	fmt.Fprint(w, responseString)
+	fmt.Fprint(w, string(response))
 }
 
 func ColaboradoresPendientesCompletarEvaluacionHanlder(w http.ResponseWriter, r *http.Request) {
@@ -65,7 +63,24 @@ func GetRptCompetencias(w http.ResponseWriter, r *http.Request) {
 
 	response, _ := json.Marshal(&Resultados)
 
-	responseString := string(response)
+	fmt.Fprint(w, string(response))
+}
 
-	fmt.Fprint(w, responseString)
+func GetRptResumenGeneralHandler(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	idEvaluacionAnual := vars["idEvaluacionAnual"]
+
+	var Resultados, erro = services.RptResumenGeneralService(idEvaluacionAnual)
+
+	if erro != nil {
+		fmt.Println(erro)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, erro)
+		return
+	}
+
+	response, _ := json.Marshal(&Resultados)
+
+	fmt.Fprint(w, string(response))
 }

@@ -9,10 +9,10 @@ func SubAreasAll() ([]models.SubArea, error) {
 
 	var SubArea []models.SubArea
 
-	db := config.ConnectDB4DX()
+	db := config.ConnectDBEO()
 	defer db.Close()
 
-	db.Order("SubArea").Find(&SubArea)
+	db.Raw(" exec usp_GetAreas").Scan(&SubArea)
 
 	return SubArea, nil
 }

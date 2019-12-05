@@ -24,6 +24,7 @@ func GetEvaluacionPorColaborador(idColaborador string, idEvaluacionAnual string)
 		Descripcion       string    `gorm:"column:Descripcion"`
 		AceptoEvaluacion  bool      `gorm:"column:AceptoEvaluacion"`
 		FechaAcepto       time.Time `gorm:"column:FechaAcepto"`
+		PermiteGuardar    bool      `gorm:"column:PermiteGuardar"`
 	}
 
 	var result []Result
@@ -46,6 +47,7 @@ func GetEvaluacionPorColaborador(idColaborador string, idEvaluacionAnual string)
 		EvaluacionTemp.Descripcion = dato.Descripcion
 		EvaluacionTemp.AceptoEvaluacion = dato.AceptoEvaluacion
 		EvaluacionTemp.FechaAcepto = dato.FechaAcepto
+		EvaluacionTemp.PermiteGuardar = dato.PermiteGuardar
 
 		db.Raw("EXEC usp_GetEncabezadosPorColaborador ?,?", idColaborador, idEvaluacionAnual).Scan(&Encabezado)
 

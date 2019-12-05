@@ -1,8 +1,10 @@
 package services
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -18,7 +20,7 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-var jwtKey = []byte("Un4M4s@cr33sL4M3j0r0pc!0n")
+var jwtKey = []byte("Un4M4s@cr33sL4M3j0r0pc!0n2")
 
 func Create_JWT(usuario models.Usuario) (string, error) {
 
@@ -103,6 +105,47 @@ func IsLogginMiddleWare(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 	})
+}
+
+func ExtractClaims(tokenStr string) (jwt.MapClaims, bool) {
+	hmacSecretString := jwtKey // Value
+	hmacSecret := []byte(hmacSecretString)
+	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
+		// check token signing method etc
+		return hmacSecret, nil
+	})
+
+	if err != nil {
+		return nil, false
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		return claims, true
+	} else {
+		log.Printf("Invalid JWT Token")
+		return nil, false
+	}
+}
+
+func GetToken(r *http.Request) (Claims, bool) {
+
+	var result Claims
+
+	reqToken := r.Header.Get("Authorization")
+
+	splitToken := strings.Split(reqToken, "Bearer")
+	if len(splitToken) != 2 {
+		return result, true
+	}
+
+	reqToken = strings.TrimSpace(splitToken[1])
+
+	token, _ := ExtractClaims(reqToken)
+
+	data, _ := json.Marshal(token)
+
+	json.Unmarshal(data, &result)
+	return result, false
 }
 
 func enableCors(w *http.ResponseWriter) {

@@ -12,7 +12,7 @@ func NewReasignacion(Modelo models.Reasignacion) (models.Reasignacion, error) {
 	Modelo.IdAsignacion = 0
 	Modelo.FechaModificacion = time.Now()
 
-	db := config.ConnectDB4DX()
+	db := config.ConnectDB()
 	defer db.Close()
 
 	db.Create(&Modelo)
@@ -24,7 +24,7 @@ func GetReasignaciones() ([]models.ReasignacionDetallada, error) {
 
 	var result []models.ReasignacionDetallada
 
-	db := config.ConnectDB4DX()
+	db := config.ConnectDB()
 	defer db.Close()
 
 	db.Raw("exec usp_GetReasignaciones").Scan(&result)
@@ -36,7 +36,7 @@ func DeleteReasignacion(IdAsignacion string) (bool, error) {
 
 	var result []models.Reasignacion
 
-	db := config.ConnectDB4DX()
+	db := config.ConnectDB()
 	defer db.Close()
 
 	db.Raw("exec usp_RemoveAsignacion ?", IdAsignacion).Scan(&result)

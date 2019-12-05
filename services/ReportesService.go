@@ -16,3 +16,15 @@ func ColaboradoresPendientesCompletarEvaluacion(idEvaluacion string) ([]models.C
 
 	return result, nil
 }
+
+func RptResumenGeneralService(idEvaluacionAnual string) ([]models.RptResumenGeneralModel, error) {
+
+	var result []models.RptResumenGeneralModel
+
+	db := config.ConnectDB()
+	defer db.Close()
+
+	db.Raw("exec usp_RptResumenGeneral  ?", idEvaluacionAnual).Scan(&result)
+
+	return result, nil
+}
