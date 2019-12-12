@@ -84,3 +84,23 @@ func GetRptResumenGeneralHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Fprint(w, string(response))
 }
+
+func GetRptResumenGeneralPorEquipoHandler(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	idEvaluacionAnual := vars["idEvaluacionAnual"]
+
+	token, _ := services.GetToken(r)
+	var Resultados, erro = services.RptResumenGeneralPorEquipoService(idEvaluacionAnual, token.Usuario.IdColaborador)
+
+	if erro != nil {
+		fmt.Println(erro)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, erro)
+		return
+	}
+
+	response, _ := json.Marshal(&Resultados)
+
+	fmt.Fprint(w, string(response))
+}

@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"strconv"
-
 	"../models"
 	"../services"
 )
@@ -56,8 +54,7 @@ func NewCargoHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Agregadopor, _ := strconv.ParseInt(token.Usuario.IdColaborador, 0, 0)
-	modelo.AgregadoPor = int(Agregadopor)
+	modelo.AgregadoPor = token.Usuario.IdColaborador
 	var cargos, err2 = services.NewCargoService(modelo)
 
 	if err2 != nil {

@@ -1,7 +1,7 @@
 package models
 
 type UsuarioCredenciales struct {
-	CodigoEmpleado string `json:"codigoEmpleado"`
-	Token          string `json:"token"`
-	Password       string `json:"password"`
+	Usuario  string `json:"Usuario"`
+	Token    string `json:"token"`
+	Password string `json:"password"`
 }

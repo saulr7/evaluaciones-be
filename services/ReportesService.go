@@ -28,3 +28,15 @@ func RptResumenGeneralService(idEvaluacionAnual string) ([]models.RptResumenGene
 
 	return result, nil
 }
+
+func RptResumenGeneralPorEquipoService(idEvaluacionAnual string, colaboradorId int) ([]models.RptResumenGeneralModel, error) {
+
+	var result []models.RptResumenGeneralModel
+
+	db := config.ConnectDB()
+	defer db.Close()
+
+	db.Raw("exec usp_RptResumenGeneralPorEquipo ?, ?", idEvaluacionAnual, colaboradorId).Scan(&result)
+
+	return result, nil
+}

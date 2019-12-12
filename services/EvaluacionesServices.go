@@ -134,7 +134,7 @@ func NuevaEvaluacionPorMeta(evaluacionPorMeta models.NuevaEvaluacionPorMeta) (mo
 	db := config.ConnectDB()
 	defer db.Close()
 
-	db.Raw(" SELECT * FROM EvaluacionesAnuales WHERE idPadre = ? AND idSubArea  = ?", evaluacionPorMeta.IdPadre, evaluacionPorMeta.IdSubArea).Scan(&result)
+	db.Raw(" SELECT * FROM EvaluacionesAnuales WHERE idPadre = ? AND idCargoPadre  = ?", evaluacionPorMeta.IdPadre, evaluacionPorMeta.IdCargoPadre).Scan(&result)
 
 	if evaluacionPorMeta.TodoElEquipo {
 

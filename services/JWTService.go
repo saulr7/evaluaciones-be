@@ -15,21 +15,22 @@ import (
 )
 
 type Claims struct {
-	Usuario models.Usuario     `json:"usuario"`
-	Menu    []models.MenuModel `json:"menu"`
+	Usuario models.ColaboradorInfoToken `json:"usuario"`
+	Menu    []models.MenuModel          `json:"menu"`
 	jwt.StandardClaims
 }
 
 var jwtKey = []byte("Un4M4s@cr33sL4M3j0r0pc!0n2")
 
-func Create_JWT(usuario models.Usuario) (string, error) {
+func Create_JWT(usuario models.ColaboradorInfoToken) (string, error) {
 
 	expirationTime := time.Now().Add(480 * time.Minute)
-	OpcionesMenu, _ := GetOpcionesDeMenu(usuario.IdColaborador)
+	//OpcionesMenu, _ := GetOpcionesDeMenu(usuario.IdColaborador)
 
 	claims := &Claims{
 		Usuario: usuario,
-		Menu:    OpcionesMenu,
+		// Menu:    OpcionesMenu,
+		Menu: nil,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},
@@ -54,14 +55,12 @@ func IsLogginMiddleWare(next http.Handler) http.Handler {
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		w.Header().Set("Access-Control-Allow-Methods", "GET,POST")
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		w.Header().Add("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Access-Control-Expose-Headers: Content-Length", "X-JSON")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, X-CSRF-Token, Authorization, X-Requested-With, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, Screen")
 
-		notAuth := []string{"/prueba", "/login", "/loginWithToken"}
+		notAuth := []string{"/prueba", "/login", "/loginWithToken", "/loginAndGenerateToken"}
 		requestPath := r.URL.Path
 
 		for _, value := range notAuth {

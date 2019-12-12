@@ -9,7 +9,7 @@ func ColaboradoresPorArea(AreaId string) ([]models.Colaborador, error) {
 
 	var colaborador []models.Colaborador
 
-	db := config.ConnectDB4DX()
+	db := config.ConnectDBEO()
 	defer db.Close()
 
 	var codigos []int
@@ -21,17 +21,17 @@ func ColaboradoresPorArea(AreaId string) ([]models.Colaborador, error) {
 	return colaborador, nil
 }
 
-func GetColaboradoresSubArea(IdSubArea string) ([]models.Colaborador, error) {
+// func GetColaboradoresSubArea(IdSubArea string) ([]models.Colaborador, error) {
 
-	var result []models.Colaborador
+// 	var result []models.Colaborador
 
-	db := config.ConnectDB4DX()
-	defer db.Close()
+// 	db := config.ConnectDBEO()
+// 	defer db.Close()
 
-	db.Raw("EXEC dbo.usp_dbgetColaboradoresByEquipo ?", IdSubArea).Scan(&result)
+// 	db.Raw("EXEC dbo.usp_dbgetColaboradoresByEquipo ?", IdSubArea).Scan(&result)
 
-	return result, nil
-}
+// 	return result, nil
+// }
 
 func GetAdminEvaluaciones() ([]models.Colaborador, error) {
 
@@ -117,10 +117,34 @@ func GetColaboradoresInfo() ([]models.ColaboradorInfo, error) {
 
 	db.Raw("EXEC usp_GetColaboradores ").Scan(&result)
 
+	// for _, colaborador := range result {
+	// 	var usuario models.NuevoUsuarioModel
+	// 	usuario.Usuario = colaborador.IdColaborador
+	// 	fmt.Println(strconv.Itoa(colaborador.IdColaborador))
+	// 	clave, _ := HashPassword(strconv.Itoa(colaborador.IdColaborador))
+	// 	usuario.Clave = clave
+	// 	usuario.ColaboradorId = colaborador.IdColaborador
+	// 	usuario.AgreadoPor = 51782
+	// 	usuario.CambiarClave = true
+
+	// 	CreateUsuarioService(usuario)
+	// }
+
 	return result, nil
 }
 
-func UpdateColaboradorActivar(colaboradorId string, Activar bool, ModificadoPor string) (models.ColaboradorInfo, error) {
+func GetColaboradoresSinUsuarioService() ([]models.ColaboradorInfo, error) {
+	var result []models.ColaboradorInfo
+
+	db := config.ConnectDBEO()
+	defer db.Close()
+
+	db.Raw("EXEC usp_GetColaboradoresSinUsuario ").Scan(&result)
+
+	return result, nil
+}
+
+func UpdateColaboradorActivar(colaboradorId string, Activar bool, ModificadoPor int) (models.ColaboradorInfo, error) {
 
 	var result models.ColaboradorInfo
 
@@ -141,6 +165,18 @@ func CreateColaboradorService(modelo models.NuevoColaboradorModel) (models.Nuevo
 
 	db.Raw("EXEC usp_CreateColaborador ?, ?, ?, ?", modelo.IdColaborador, modelo.Nombre, modelo.FechaIngreso, modelo.AgregadoPor).Scan(&result)
 	db.Raw("EXEC usp_UpdateColaboradorCargo ?, ?, ?", modelo.IdColaborador, modelo.IdCargo, modelo.AgregadoPor).Scan(&result)
+
+	return result, nil
+}
+
+func GetColaboradoresCargoService() ([]models.ColaboradorCargo, error) {
+
+	var result []models.ColaboradorCargo
+
+	db := config.ConnectDBEO()
+	defer db.Close()
+
+	db.Raw("EXEC usp_GetColaboradoresConCargo ").Scan(&result)
 
 	return result, nil
 }

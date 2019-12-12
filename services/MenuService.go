@@ -5,11 +5,23 @@ import (
 	"../models"
 )
 
-func GetOpcionesDeMenu(IdColaborador string) ([]models.MenuModel, error) {
+func GetOpcionesDeMenuByUserService(IdColaborador int) ([]models.MenuModel, error) {
 
 	var result []models.MenuModel
 
-	db := config.ConnectDB()
+	db := config.ConnectDBEO()
+	defer db.Close()
+
+	db.Raw("exec usp_GetOpcionesDeMenu ?", IdColaborador).Scan(&result)
+
+	return result, nil
+}
+
+func GetOpcionesDeMenu(IdColaborador int) ([]models.MenuModel, error) {
+
+	var result []models.MenuModel
+
+	db := config.ConnectDBEO()
 	defer db.Close()
 
 	db.Raw("exec usp_GetOpcionesDeMenu ?", IdColaborador).Scan(&result)

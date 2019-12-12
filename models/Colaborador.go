@@ -22,6 +22,25 @@ type NuevoColaboradorModel struct {
 	IdColaborador int
 	Nombre        string
 	FechaIngreso  string
-	AgregadoPor   string
+	AgregadoPor   int
 	IdCargo       int
+}
+type ColaboradorInfoToken struct {
+	IdColaborador int    `gorm:"column:ColaboradorId"`
+	Nombre        string `gorm:"column:Nombre"`
+	CargoId       int    `gorm:"column:CargoId"`
+	Cargo         string `gorm:"column:Cargo"`
+	AreaId        int    `gorm:"column:AreaId"`
+	Area          string `gorm:"column:Area"`
+	EmpresaId     int    `gorm:"column:EmpresaId"`
+	Empresa       string `gorm:"column:Empresa"`
+	PerfilCod     int    `gorm:"column:PerfilCod"`
+	Usuario       string `gorm:"column:Usuario"`
+	CambiarClave  bool   `gorm:"column:CambiarClave"`
+}
+
+type ColaboradorCargo struct {
+	IdColaborador int    `gorm:"column:ColaboradorId"`
+	Nombre        string `gorm:"column:Nombre"`
+	CargoId       int    `gorm:"column:CargoId"`
 }

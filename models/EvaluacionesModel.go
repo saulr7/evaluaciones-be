@@ -58,7 +58,7 @@ type EvaluacionAnual struct {
 	FechaCreacion     time.Time `gorm:"column:FechaCreacion"`
 	FechaModificacion time.Time `gorm:"column:FechaModificacion"`
 	ModificadaPor     int       `gorm:"column:ModificadaPor"`
-	IdSubArea         int       `gorm:"column:idSubArea"`
+	IdCargoPadre      int       `gorm:"column:idCargoPadre"`
 	TodasLasAreas     bool      `gorm:"column:TodasLasAreas"`
 	IdPadre           int       `gorm:"column:idPadre"`
 	TodoElEquipo      bool      `gorm:"column:TodoElEquipo"`
@@ -79,7 +79,7 @@ type EvaluacionMeta struct {
 	CreadaPor         int       `gorm:"column:CreadaPor"`
 	NombreCreador     string    `gorm:"column:NombreCreador"`
 	TodoElEquipo      bool      `gorm:"column:TodoElEquipo"`
-	IdSubArea         int       `gorm:"column:idSubArea"`
+	IdCargoPadre      int       `gorm:"column:idCargoPadre"`
 	TotalPreguntas    int       `gorm:"column:TotalPreguntas"`
 	Completo          bool      `gorm:"column:Completo"`
 	PreguntasMeta     []PreguntasPorMetaContestadas

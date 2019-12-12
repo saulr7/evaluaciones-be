@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"../models"
 	"../services"
@@ -26,25 +25,6 @@ func GetColaboradoresPorAreaHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, _ := json.Marshal(&subAreas)
-
-	fmt.Fprint(w, string(response))
-}
-
-func GetColaboradoresSubArea(w http.ResponseWriter, r *http.Request) {
-
-	vars := mux.Vars(r)
-	idSubArea := vars["idSubArea"]
-
-	var usuarioModel, erro = services.GetColaboradoresSubArea(idSubArea)
-
-	if erro != nil {
-		fmt.Println(erro)
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintln(w, erro)
-		return
-	}
-
-	response, _ := json.Marshal(&usuarioModel)
 
 	fmt.Fprint(w, string(response))
 }
@@ -126,25 +106,41 @@ func GetColaboradoresInfoHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, string(response))
 }
 
-func UpdateColaboradorActivarHandler(w http.ResponseWriter, r *http.Request) {
+func GetColaboradoresSinUsuarioHandler(w http.ResponseWriter, r *http.Request) {
 
-	reqToken := r.Header.Get("Authorization")
+	var cargosGrado, erro = services.GetColaboradoresSinUsuarioService()
 
-	splitToken := strings.Split(reqToken, "Bearer")
-	if len(splitToken) != 2 {
-		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprintln(w, "No se ha proporcionado el token")
+	if erro != nil {
+		fmt.Println(erro)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, erro)
 		return
 	}
 
-	reqToken = strings.TrimSpace(splitToken[1])
+	response, _ := json.Marshal(&cargosGrado)
 
-	token, _ := services.ExtractClaims(reqToken)
+	fmt.Fprint(w, string(response))
+}
 
-	data, _ := json.Marshal(token)
+func GetColaboradoresCargoHandler(w http.ResponseWriter, r *http.Request) {
 
-	var result services.Claims
-	json.Unmarshal(data, &result)
+	var cargosGrado, erro = services.GetColaboradoresCargoService()
+
+	if erro != nil {
+		fmt.Println(erro)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, erro)
+		return
+	}
+
+	response, _ := json.Marshal(&cargosGrado)
+
+	fmt.Fprint(w, string(response))
+}
+
+func UpdateColaboradorActivarHandler(w http.ResponseWriter, r *http.Request) {
+
+	token, _ := services.GetToken(r)
 
 	type ActualizarModel struct {
 		ColaboradorId string
@@ -161,7 +157,7 @@ func UpdateColaboradorActivarHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var cargosGrado, erro = services.UpdateColaboradorActivar(actualizar.ColaboradorId, actualizar.Activar, result.Usuario.IdColaborador)
+	var resul, erro = services.UpdateColaboradorActivar(actualizar.ColaboradorId, actualizar.Activar, token.Usuario.IdColaborador)
 
 	if erro != nil {
 		fmt.Println(erro)
@@ -170,7 +166,7 @@ func UpdateColaboradorActivarHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, _ := json.Marshal(&cargosGrado)
+	response, _ := json.Marshal(&resul)
 
 	fmt.Fprint(w, string(response))
 }
@@ -180,7 +176,7 @@ func CreateColaboradorHandler(w http.ResponseWriter, r *http.Request) {
 	token, _ := services.GetToken(r)
 
 	type ActualizarModel struct {
-		ColaboradorId string
+		ColaboradorId int
 		Activar       bool
 	}
 
@@ -195,8 +191,6 @@ func CreateColaboradorHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	actualizar.AgregadoPor = token.Usuario.IdColaborador
-
-	fmt.Println(actualizar)
 
 	var cargosGrado, erro = services.CreateColaboradorService(actualizar)
 
