@@ -290,3 +290,15 @@ func NuevaEvaluacionAnual(modelo models.EvaluacionAnual) (models.EvaluacionAnual
 
 	return result, nil
 }
+
+func EliminarEvaluacionPorMetaService(IdEvaluacionMeta string) (models.EvaluacionAnual, error) {
+
+	var result models.EvaluacionAnual
+
+	db := config.ConnectDB()
+	defer db.Close()
+
+	db.Raw(" exec usp_UpdateHumansMegaMistake ?", IdEvaluacionMeta).Scan(&result)
+
+	return result, nil
+}

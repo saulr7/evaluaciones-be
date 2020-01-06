@@ -203,3 +203,22 @@ func NuevaEvaluacionAnualHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Fprintf(w, string(response))
 }
+
+func EliminarEvaluacionPorMetaHandler(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	IdEvaluacionMeta := vars["IdEvaluacionMeta"]
+
+	var respuesta, erro = services.EliminarEvaluacionPorMetaService(IdEvaluacionMeta)
+
+	if erro != nil {
+		fmt.Println(erro)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, erro)
+		return
+	}
+
+	response, _ := json.Marshal(&respuesta)
+
+	fmt.Fprintf(w, string(response))
+}

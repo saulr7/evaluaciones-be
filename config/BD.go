@@ -18,7 +18,7 @@ func ConnectDB() *gorm.DB {
 		panic(err)
 	}
 
-	db.LogMode(false)
+	db.LogMode(true)
 	db.SingularTable(true)
 
 	return db
@@ -34,7 +34,7 @@ func ConnectDBEO() *gorm.DB {
 		panic(err)
 	}
 
-	db.LogMode(false)
+	db.LogMode(true)
 	db.SingularTable(true)
 
 	return db
