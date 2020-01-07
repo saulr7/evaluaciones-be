@@ -58,5 +58,6 @@ func Routes() *mux.Router {
 	myRouter.HandleFunc("/UpdateUsuarioActivar", UpdateUsuarioActivarHandler).Methods("POST")
 	myRouter.HandleFunc("/GetColaboradoresCargo", GetColaboradoresCargoHandler).Methods("GET")
 	myRouter.HandleFunc("/EliminarEvaluacionPorMeta/{IdEvaluacionMeta}", EliminarEvaluacionPorMetaHandler).Methods("GET")
+	myRouter.HandleFunc("/RegistrarEventoDelSistema", RegistrarEventoDelSistema).Methods("POST")
 	return myRouter
 }
