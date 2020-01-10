@@ -17,7 +17,6 @@ func Routes() *mux.Router {
 	myRouter.HandleFunc("/reasignaciones", GetReasignaciones).Methods("GET")
 	myRouter.HandleFunc("/deleteReasignacion/{idAsignacion}", DeleteReasignacion).Methods("GET")
 	myRouter.HandleFunc("/SubAreas", SubAreas).Methods("GET")
-	// myRouter.HandleFunc("/GetColaboradoresSubArea/{idSubArea}", GetColaboradoresSubArea).Methods("GET")
 	myRouter.HandleFunc("/NewReasignacion", NewReasignacion).Methods("POST")
 	myRouter.HandleFunc("/GetCompetenciasPorColaborador/{idColaborador}", GetCompetenciasPorColaborador).Methods("GET")
 	myRouter.HandleFunc("/GetEvaluacionPorColaborador/{idColaborador}/{idEvaluacionAnual}", GetEvaluacionPorColaborador).Methods("GET")
@@ -59,5 +58,8 @@ func Routes() *mux.Router {
 	myRouter.HandleFunc("/GetColaboradoresCargo", GetColaboradoresCargoHandler).Methods("GET")
 	myRouter.HandleFunc("/EliminarEvaluacionPorMeta/{IdEvaluacionMeta}", EliminarEvaluacionPorMetaHandler).Methods("GET")
 	myRouter.HandleFunc("/RegistrarEventoDelSistema", RegistrarEventoDelSistema).Methods("POST")
+	myRouter.HandleFunc("/ResetearNotaEvaluacionPorMeta", ResetearNotaEvaluacionPorMetaHandler).Methods("POST")
+	myRouter.HandleFunc("/ResetearNotaEvaluacionGeneral", ResetearNotaEvaluacionGeneralHandler).Methods("POST")
+	myRouter.HandleFunc("/RptReseteoDeNota/{pagina}", GetRptReseteoDeNotaHandler).Methods("GET")
 	return myRouter
 }

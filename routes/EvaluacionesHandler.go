@@ -222,3 +222,61 @@ func EliminarEvaluacionPorMetaHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Fprintf(w, string(response))
 }
+
+func ResetearNotaEvaluacionPorMetaHandler(w http.ResponseWriter, r *http.Request) {
+
+	var resetearNota models.ResetearNotaEvaluacion
+	err := json.NewDecoder(r.Body).Decode(&resetearNota)
+
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, "Los datos proporcionados no son correctos")
+		return
+	}
+
+	token, _ := services.GetToken(r)
+	resetearNota.EliminadaPor = token.Usuario.IdColaborador
+
+	var respuesta, erro = services.ResetearNotaEvaluacionPorMetaService(resetearNota)
+
+	if erro != nil {
+		fmt.Println(erro)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, erro)
+		return
+	}
+
+	response, _ := json.Marshal(&respuesta)
+
+	fmt.Fprintf(w, string(response))
+}
+
+func ResetearNotaEvaluacionGeneralHandler(w http.ResponseWriter, r *http.Request) {
+
+	var resetearNota models.ResetearNotaEvaluacion
+	err := json.NewDecoder(r.Body).Decode(&resetearNota)
+
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, "Los datos proporcionados no son correctos")
+		return
+	}
+
+	token, _ := services.GetToken(r)
+	resetearNota.EliminadaPor = token.Usuario.IdColaborador
+
+	var respuesta, erro = services.ResetearNotaEvaluacionGeneralService(resetearNota)
+
+	if erro != nil {
+		fmt.Println(erro)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, erro)
+		return
+	}
+
+	response, _ := json.Marshal(&respuesta)
+
+	fmt.Fprintf(w, string(response))
+}

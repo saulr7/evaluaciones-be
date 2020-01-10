@@ -15,13 +15,14 @@ func Serve() {
 
 	http.Handle("/", CORS(services.IsLogginMiddleWare(myRouter)))
 
-	err := http.ListenAndServe(":8088", nil)
+	http.ListenAndServe(":8088", nil)
 
 	//err := http.ListenAndServeTLS("servicioevaluacionespu.banpais.hn:8088", "/etc/ssl/BPevaluaciones/servicioevaluacionespu.banpais.hn.cer", "/etc/ssl/BPevaluaciones/servicioevaluacionespu.banpais.hn.key", nil)
-	//err := http.ListenAndServeTLS("servicioevaluaciones.banpais.hn:8088", "/etc/ssl/BPevaluaciones/servicioevaluaciones.banpais.hn.cer", "/etc/ssl/BPevaluaciones/servicioevaluaciones.banpais.hn.key", nil)
-	if err != nil {
-		panic(err)
-	}
+
+	// err := http.ListenAndServeTLS("servicioevaluaciones.banpais.hn:8088", "/etc/ssl/BPevaluaciones/servicioevaluaciones.banpais.hn.cer", "/etc/ssl/BPevaluaciones/servicioevaluaciones.banpais.hn.key", nil)
+	// if err != nil {
+	// 	panic(err)
+	// }
 }
 
 func CORS(h http.Handler) http.Handler {

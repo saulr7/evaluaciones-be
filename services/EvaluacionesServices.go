@@ -100,25 +100,30 @@ func GetEvaluacionesCompletas(idColaborador string) ([]models.EvaluacionAnualCom
 func GuardarEvaluacionCompletada(evaluacionCompletada models.EvaluacionCompletada) (bool, error) {
 
 	var result []models.EvaluacionAnual
-	var comentario models.Comentario
+	//var comentario models.Comentario
 
 	db := config.ConnectDB()
 	defer db.Close()
 
+	LogToFile("Guardar evaluacion completa", evaluacionCompletada)
+
 	for _, respuesta := range evaluacionCompletada.Respuestas {
 
-		respuestaPP := models.RespuestasPorPreguntas{IdEvaluacionAnual: evaluacionCompletada.IdEvaluacionAnual, IdEvaluacion: evaluacionCompletada.EvaluacionId, IdPregunta: respuesta.IdPregunta, IdDetallePregunta: respuesta.IdRespuesta, IdColaborador: evaluacionCompletada.IdColaborador, Valor: respuesta.Valor}
+		// respuestaPP := models.RespuestasPorPreguntas{IdRespuestaPorPregunta: 0, IdEvaluacionAnual: evaluacionCompletada.IdEvaluacionAnual, IdEvaluacion: evaluacionCompletada.EvaluacionId, IdPregunta: respuesta.IdPregunta, IdDetallePregunta: respuesta.IdRespuesta, IdColaborador: evaluacionCompletada.IdColaborador, Valor: respuesta.Valor}
 
-		db.Create(&respuestaPP)
+		// db.Create(respuestaPP)
 
-		if respuesta.TxtComentario != "" {
-			comentario.IdComentario = 0
-			comentario.Comentario = respuesta.TxtComentario
-			comentario.IdRespuestaPorPregunta = respuestaPP.IdRespuestaPorPregunta
+		// if respuesta.TxtComentario != "" {
+		// 	comentario.IdComentario = 0
+		// 	comentario.Comentario = respuesta.TxtComentario
+		// 	comentario.IdRespuestaPorPregunta = respuestaPP.IdRespuestaPorPregunta
 
-			db.Create(&comentario)
-		}
-		respuestaPP.IdRespuestaPorPregunta = 0
+		// 	db.Create(&comentario)
+		// }
+
+		db.Raw(" exec usp_GuardarRespuesta ?, ?, ?, ?, ?, ?, ?", evaluacionCompletada.IdEvaluacionAnual, evaluacionCompletada.EvaluacionId, respuesta.IdPregunta, respuesta.IdRespuesta, evaluacionCompletada.IdColaborador, respuesta.Valor, respuesta.TxtComentario).Scan(&result)
+
+		// respuestaPP.IdRespuestaPorPregunta = 0
 	}
 
 	db.Raw("UPDATE Evaluaciones SET Completo = 1, evaluadoPor =?, FechaCompletado = GETDATE() WHERE idEvaluacion = ?", evaluacionCompletada.EvaluadoPor, evaluacionCompletada.EvaluacionId).Scan(&result)
@@ -133,6 +138,8 @@ func NuevaEvaluacionPorMeta(evaluacionPorMeta models.NuevaEvaluacionPorMeta) (mo
 
 	db := config.ConnectDB()
 	defer db.Close()
+
+	LogToFile("Nueva evaluacion por meta", evaluacionPorMeta)
 
 	db.Raw(" SELECT * FROM EvaluacionesAnuales WHERE idPadre = ? AND idCargoPadre  = ?", evaluacionPorMeta.IdPadre, evaluacionPorMeta.IdCargoPadre).Scan(&result)
 
@@ -299,6 +306,47 @@ func EliminarEvaluacionPorMetaService(IdEvaluacionMeta string) (models.Evaluacio
 	defer db.Close()
 
 	db.Raw(" exec usp_UpdateHumansMegaMistake ?", IdEvaluacionMeta).Scan(&result)
+
+	return result, nil
+}
+
+func ResetearNotaEvaluacionPorMetaService(modelo models.ResetearNotaEvaluacion) (models.EvaluacionAnual, error) {
+
+	var result models.EvaluacionAnual
+
+	db := config.ConnectDB()
+	defer db.Close()
+
+	db.Raw(" EXEC usp_ReiniciaEvaluacionMeta ?, ?, ?", modelo.ColaboradorId, modelo.EvluacionId, modelo.EliminadaPor).Scan(&result)
+	modelo.TipoNota = 1
+	RegistrarReseteoDeNota(modelo)
+
+	return result, nil
+}
+
+func ResetearNotaEvaluacionGeneralService(modelo models.ResetearNotaEvaluacion) (models.EvaluacionAnual, error) {
+
+	var result models.EvaluacionAnual
+
+	db := config.ConnectDB()
+	defer db.Close()
+
+	db.Raw(" EXEC usp_ReiniciaEvaluacionMetrica ?, ?, ?", modelo.ColaboradorId, modelo.EvluacionId, modelo.EliminadaPor).Scan(&result)
+
+	modelo.TipoNota = 2
+	RegistrarReseteoDeNota(modelo)
+
+	return result, nil
+}
+
+func RegistrarReseteoDeNota(modelo models.ResetearNotaEvaluacion) (models.EvaluacionAnual, error) {
+
+	var result models.EvaluacionAnual
+
+	db := config.ConnectDB()
+	defer db.Close()
+
+	db.Raw(" EXEC usp_RegistrarReseteoDeNota  ?, ?, ?, ?", modelo.TipoNota, modelo.ColaboradorId, modelo.EliminadaPor, modelo.EvluacionId).Scan(&result)
 
 	return result, nil
 }

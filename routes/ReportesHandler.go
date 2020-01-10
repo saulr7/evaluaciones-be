@@ -104,3 +104,22 @@ func GetRptResumenGeneralPorEquipoHandler(w http.ResponseWriter, r *http.Request
 
 	fmt.Fprint(w, string(response))
 }
+
+func GetRptReseteoDeNotaHandler(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	pagina := vars["pagina"]
+
+	var Resultados, erro = services.RptReseteoNotaService(pagina)
+
+	if erro != nil {
+		fmt.Println(erro)
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, erro)
+		return
+	}
+
+	response, _ := json.Marshal(&Resultados)
+
+	fmt.Fprint(w, string(response))
+}

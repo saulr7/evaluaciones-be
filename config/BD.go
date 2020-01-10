@@ -18,7 +18,7 @@ func ConnectDB() *gorm.DB {
 		panic(err)
 	}
 
-	db.LogMode(false)
+	db.LogMode(true)
 	db.SingularTable(true)
 
 	return db
@@ -26,7 +26,7 @@ func ConnectDB() *gorm.DB {
 
 func ConnectDBEO() *gorm.DB {
 	//db, err := gorm.Open("mssql", "sqlserver://app_BPEvaluaciones:Bp3v@Lu8c1oN3$@PRD-APLICABE04:1433?database=EstructuraOrganizacional")
-	// db, err := gorm.Open("mssql", "sqlserver://app_BPEvaluaciones:Bp3v@Lu8c1oN3$@pu-aplicabe04:1433?database=EstructuraOrganizacional")
+	//db, err := gorm.Open("mssql", "sqlserver://app_BPEvaluaciones:Bp3v@Lu8c1oN3$@pu-aplicabe04:1433?database=EstructuraOrganizacional")
 	db, err := gorm.Open("mssql", "sqlserver://app_4dxtablero:app_4dxtablero@des-cobbe01:1433?database=EstructuraOrganizacional")
 
 	if err != nil {
@@ -34,7 +34,7 @@ func ConnectDBEO() *gorm.DB {
 		panic(err)
 	}
 
-	db.LogMode(false)
+	db.LogMode(true)
 	db.SingularTable(true)
 
 	return db

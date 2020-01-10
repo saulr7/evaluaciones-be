@@ -40,3 +40,15 @@ func RptResumenGeneralPorEquipoService(idEvaluacionAnual string, colaboradorId i
 
 	return result, nil
 }
+
+func RptReseteoNotaService(pagina string) ([]models.ReporteReseteoDeNota, error) {
+
+	var result []models.ReporteReseteoDeNota
+
+	db := config.ConnectDB()
+	defer db.Close()
+
+	db.Raw("exec usp_RptReseteoDeNota ?", pagina).Scan(&result)
+
+	return result, nil
+}

@@ -82,6 +82,7 @@ type EvaluacionMeta struct {
 	IdCargoPadre      int       `gorm:"column:idCargoPadre"`
 	TotalPreguntas    int       `gorm:"column:TotalPreguntas"`
 	Completo          bool      `gorm:"column:Completo"`
+	PermiteGuardar    bool      `gorm:"column:PermiteGuardar"`
 	PreguntasMeta     []PreguntasPorMetaContestadas
 }
 
@@ -98,4 +99,11 @@ type EvaluacionAnualCompleta struct {
 	EvaluacionAnual
 	NombreEvaluo    string    `gorm:"column:NombreEvaluo"`
 	FechaCompletado time.Time `gorm:"column:FechaCompletado"`
+}
+
+type ResetearNotaEvaluacion struct {
+	ColaboradorId int
+	EliminadaPor  int
+	EvluacionId   int
+	TipoNota      int
 }
